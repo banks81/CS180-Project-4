@@ -52,4 +52,10 @@ public class Products {
     public void setSales(int sales) {
         this.sales = sales;
     }
+    
+    public String toString() {
+        return String.format("Product Name: " + getName() + ", Description: " + getDescription()
+        + ", Quantity Available: " + getQuantity() + ", Price: " + getPrice());
+    }
+    
 }
