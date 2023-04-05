@@ -25,7 +25,29 @@ public class Customer extends User {
         this.purchaseCount = purchaseCount;
     }
 
-    public void addProducts(Products products) {
-        pastPurchase.add(products);
+    public void addProducts(Products products, int purchases) {
+        int index = 0;
+        for (Products product : pastPurchase) {
+            if (equals(product, products)) {
+                purchaseCount.set(index, purchaseCount.get(index) + purchases);
+                break;
+            }
+            index++;
+        }
+        if (index == pastPurchase.size()) {
+            pastPurchase.add(products);
+            purchaseCount.add(purchases);
+        }
+    }
+
+    public boolean equals(Products product1, Products product2) {
+        if (product1.getName().equals(product2.getName())) {
+            if (product1.getPrice() == product2.getPrice()) {
+                if (product1.getDescription().equals(product2.getDescription())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
