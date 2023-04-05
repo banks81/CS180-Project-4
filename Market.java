@@ -65,7 +65,6 @@ public class Market {
                 System.out.println(ENTERVALID);
             }
         } while (invalidChoice);
-        invalidChoice = false;
         if (choice == 1) { //sign in
             //code for signing in
         } else if (choice == 2) { //Create an account
@@ -118,6 +117,8 @@ public class Market {
                         if (choice != 1 && choice != 2 && choice != 3) {
                             invalidChoice = true;
                             System.out.println(ENTERVALID);
+                        } else {
+                            invalidChoice = false;
                         }
                     } catch (NumberFormatException e) {
                         invalidChoice = true;
@@ -126,17 +127,19 @@ public class Market {
                 } while (invalidChoice);
                 if (choice == 1) { //view/edit your account
                     do { //loop that keeps them in the view/edit account
-                        System.out.println(CUSTINFO);
-                        System.out.println("Name: " + currentUser.getName() +
-                                "\nEmail: " + currentUser.getEmail() +
-                                "\nPassword: " + currentUser.getPassword());
-                        System.out.println(CUSTACCOUNTCHOICES);
                         do {
+                            System.out.println(CUSTINFO);
+                            System.out.println("Name: " + currentUser.getName() +
+                                    "\nEmail: " + currentUser.getEmail() +
+                                    "\nPassword: " + currentUser.getPassword());
+                            System.out.println(CUSTACCOUNTCHOICES);
                             try {
                                 choice = Integer.parseInt(scan.nextLine());
                                 if (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5) {
                                     invalidChoice = true;
                                     System.out.println(ENTERVALID);
+                                } else {
+                                    invalidChoice = false;
                                 }
                             } catch (NumberFormatException e) {
                                 invalidChoice = true;
@@ -144,29 +147,26 @@ public class Market {
                             }
                         } while (invalidChoice);
                         switch (choice) {
-                            case 1: //edit your name
+                            case 1 -> { //edit your name
                                 System.out.println(CHANGENAME);
                                 String name = scan.nextLine();
                                 currentUser.setName(name);
                                 System.out.println(CHANGED);
-                                break;
-
-                            case 2: //edit your email
+                            }
+                            case 2 -> { //edit your email
                                 System.out.println(CHANGEEMAIL);
                                 String email = scan.nextLine();
                                 //TODO scan through and make sure email isn't duplicated
                                 currentUser.setEmail(email);
                                 System.out.println(CHANGED);
-                                break;
-
-                            case 3: //edit your password
+                            }
+                            case 3 -> { //edit your password
                                 System.out.println(CHANGEPASSWORD);
                                 String password = scan.nextLine();
                                 currentUser.setPassword(password);
                                 System.out.println(CHANGED);
-                                break;
-
-                            case 4: //delete your account
+                            }
+                            case 4 -> { //delete your account
                                 do {
                                     System.out.println(SUREDELETE);
                                     System.out.println(YESNO);
@@ -186,12 +186,9 @@ public class Market {
                                 } else {
                                     System.out.println("Ok!");
                                 }
-
-                                break;
-
-                            case 5: //go back to main menu
-                                stayInMenu = false;
-                                break;
+                            }
+                            case 5 -> //go back to main menu
+                                    stayInMenu = false;
                         }
 
                     } while (stayInMenu);
