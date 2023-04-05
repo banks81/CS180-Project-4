@@ -57,4 +57,14 @@ public class Store {
     public void addGoods(Products products) {
         getGoods().add(products);
     }
+    
+    public String toMarketString() {
+        String store = "Store Name: " + getName() + "\nProducts: \n";
+        for (int i = 0; i < goods.size(); i++) {
+            store = store + goods.get(i).toString() + "\n";
+        }
+        return store;
+        //to print in the market   
+    }
+    
 }
