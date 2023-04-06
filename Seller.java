@@ -45,7 +45,7 @@ public class Seller extends User{
         return total.toString();
     }
     public void newStore(String storeName) {
-        storeList.add(new Store(storeName, getName(), getEmail()));
+        storeList.add(new Store(storeName, getName(), getEmail())); //edit; seller name and email added to field of the store so we may backtrack?
     }
     public void addStore(Store store) {
         storeList.add(store);
@@ -67,7 +67,7 @@ public class Seller extends User{
                     String[] lineBreak = eachLine.split(",");
                     //Assuming the csv file is in name, price, quantity, description format
                     store.addGoods(new Products(lineBreak[0], Double.parseDouble(lineBreak[1]),
-                            Integer.parseInt(lineBreak[2]), lineBreak[3], 0, store.getName()));
+                            Integer.parseInt(lineBreak[2]), lineBreak[3], 0, store.getName())); //edit; store name added to the parameter & field of Products
                 } catch (Exception e) {
                     System.out.println("Wrong file format!");
                     break;
