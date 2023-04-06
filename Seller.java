@@ -44,8 +44,11 @@ public class Seller extends User{
         }
         return total.toString();
     }
-    public void newStore(String name) {
-        storeList.add(new Store(name));
+    public void newStore(String storeName) {
+        storeList.add(new Store(storeName, getName(), getEmail()));
+    }
+    public void addStore(Store store) {
+        storeList.add(store);
     }
     public void assignProduct(String fileName, Store store) throws FileNotFoundException {
         File file = new File(fileName);
@@ -64,13 +67,12 @@ public class Seller extends User{
                     String[] lineBreak = eachLine.split(",");
                     //Assuming the csv file is in name, price, quantity, description format
                     store.addGoods(new Products(lineBreak[0], Double.parseDouble(lineBreak[1]),
-                            Integer.parseInt(lineBreak[2]), lineBreak[3]));
+                            Integer.parseInt(lineBreak[2]), lineBreak[3], 0, store.getName()));
                 } catch (Exception e) {
                     System.out.println("Wrong file format!");
                     break;
                 }
             }
-
             bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
