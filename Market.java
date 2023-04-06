@@ -67,6 +67,69 @@ public class Market {
         } while (invalidChoice);
         if (choice == 1) { //sign in
             //code for signing in
+            //I have two ArrayLists, one for Customer and one for Seller. Perhaps you want to postpone initializing the user type before this.
+            //If we can use threads maybe we can 
+            //Synchronously run two threads for each ArrayList? Or we can just: 
+            /*
+            boolean isUserFound = false;
+            do {
+                System.out.println(ENTERLOGIN);
+                String email = scan.nextLine();
+                for (Customer customerRegistered : customers) {
+                    if (customerRegistered.getEmail.equals(email)) {
+                        do {
+                            System.out.println(ENTERPSWD);
+                            String password = scan.nextLine();
+                            if (customerRegistered.getPassword.equals(password)) {
+                                System.out.println(HI);
+                                Customer currentUser = customerRegistered;
+                                isUserFound = true;
+                            } else {
+                                System.out.println(NOPSWD);
+                            }
+                            if (!isUserFound) {
+                                //should give them an option to force-quit.
+                            }
+                        } while (!isUserFound);
+                        break;
+                    }
+                }
+                if (!isUserFound) {
+                    for (Seller sellerRegistered : sellers) {
+                        if (sellerRegistered.getEmail.equals(email)) {
+                            do {
+                                System.out.println(ENTERPSWD);
+                                String password = scan.nextLine();
+                                if (sellerRegistered.getPassword.equals(password)) {
+                                    System.out.println(HI);
+                                    Seller currentUser = sellerRegistered;
+                                    isUserFound = true;
+                                } else {
+                                    System.out.println(NOPSWD);
+                                }
+                                if (!isUserFound) {
+                                    //Should give them an option to force-quit.
+                                }
+                            } while (!isUserFound);
+                            break;
+                        }
+                    }   
+                }
+                if (!isUserFound) {
+                    System.out.println(NOUSER);
+                    System.out.println("Would you like to re-enter your email?");
+                    if (!scan.nextLine.toLowerCase().equals("yes")) {
+                        System.out.println("Would you like to create a new account?");
+                        if (scan.nextLine.toLowerCase().equals("yes")) {
+                            break;
+                        } else {
+                            //add early termination method
+                        }
+                    }
+                }
+            } while (!isUserFound);
+            and perhaps make create account if (choice == 2 || !isUserFound)
+            */
         } else if (choice == 2) { //Create an account
             do {
                 System.out.println(SELLORCUST);
