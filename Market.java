@@ -7,9 +7,10 @@ public class Market {
     public static final String ENTERVALID = "Please enter a valid option!";
     public static final String YESNO = "1. Yes\n2. No";
     public static final String ENTERLOGIN = "Please enter your email address.";
-    public static final String NOUSER = "No user found with given email!";
+    public static final String NOUSER = "No user found with given credentials!";
+    public static final String TRYAGAIN = "Would you like to try again?";
     public static final String ENTERPSWD = "Please enter your password.";
-    public static final String NOPSWD = "Incorrect password!";
+
     public static final String HI = "Welcome back!";
     public static final String BYE = "Sorry to see you go!";
     public static final String OPTIONS = "Please choose your option:";
@@ -37,19 +38,49 @@ public class Market {
             "3. Edit your password\n4. Delete your account\n5. Return to main menu";
     public static final String CUSTINFO = "Customer Info:";
 
+
+    public String toMarket(ArrayList<Store> stores) {
+        String marketString = "MARKETPLACE\nSelect which product you'd like to view!\n";
+        int counter = 1;
+        for (int i = 0; i < stores.size(); i++ ) {
+            for (int j = 0; j < stores.get(i).getGoods().size(); j++) {
+                marketString = marketString + counter + ". Store: " + stores.get(i).getName() +
+                        ", " + stores.get(i).getGoods().get(j).toString() + "\n";
+            }
+        }
+        // I did this really quickly -- it may be smarter to make it an array of strings to be printed
+
+        return marketString;
+    }
+
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         int choice = -1; //scanner choice
         boolean invalidChoice = false; //the boolean I'll use for do-while loops to check invalid input
         boolean stayInMenu = true;
-        ArrayList<User> userList = new ArrayList<>();
+
+        ArrayList<User> customersList = new ArrayList<>();
+        ArrayList<User> sellersList = new ArrayList<>();
+        ArrayList<Store> storesList = new ArrayList<>(); //arrayList of stores in the marketplace
+        ArrayList<Products> productsList = new ArrayList<>();
+
         User currentUser = null; //the current user of the program
 
         //TODO here call the method that parses through the files and gets all the info
+        //Necessary arrays to have:
+        // 1. arrayList of products
+        //
         //for buyers and sellers and etc
 
         System.out.println(WELCOME);
         do {
+            /* this code is to test functionality without file IO
+            customersList.add(new Customer("sofia@gmail.com", "sofia", "sofia"));
+            customersList.add(new Customer("email2", "name2", "password2"));
+            customersList.add(new Customer("email3", "name3", "password3"));
+            sellersList.add(new Seller("email4", "name4", "password4"));
+            sellersList.add(new Seller("email5", "name5", "password5"));
+            */
             System.out.println(LOGIN);
             System.out.println(YESNO);
             try {
@@ -65,8 +96,62 @@ public class Market {
                 System.out.println(ENTERVALID);
             }
         } while (invalidChoice);
+        boolean matches = false;
         if (choice == 1) { //sign in
-            //code for signing in
+            do {
+                System.out.println(ENTERLOGIN);
+                String email = scan.nextLine();
+                System.out.println(ENTERPSWD);
+                String password = scan.nextLine();
+                for (int i = 0; i < customersList.size(); i++) {
+                    if (email.equals(customersList.get(i).getEmail()) &&
+                            password.equals(customersList.get(i).getPassword())) {
+                        currentUser = customersList.get(i);
+                        matches = true;
+                    }
+                }
+                if (!matches) {
+                    for (int i = 0; i < sellersList.size(); i++) {
+                        if (email.equals(sellersList.get(i).getEmail()) &&
+                                password.equals(sellersList.get(i).getPassword())) {
+                            currentUser = sellersList.get(i);
+                            matches = true;
+                        }
+                    }
+                }
+
+
+                if (matches) {
+                    System.out.println("Connecting you to the market!");
+                } else {
+                    System.out.println(NOUSER);
+                    do {
+                        System.out.println(TRYAGAIN);
+                        System.out.println(YESNO);
+                        try {
+                            choice = Integer.parseInt(scan.nextLine());
+                            if (choice != 1 && choice != 2) {
+                                invalidChoice = true;
+                                System.out.println(ENTERVALID);
+                            } else {
+                                invalidChoice = false;
+                            }
+                        } catch (NumberFormatException e) {
+                            invalidChoice = true;
+                            System.out.println(ENTERVALID);
+                        }
+                    } while (invalidChoice);
+                    if (choice == 1) {
+                        matches = false;
+                    } else {
+                        System.out.println(BYE);
+                        return;
+                    }
+                }
+
+            } while (!matches);
+
+            //other, optional way to validate
             //I have two ArrayLists, one for Customer and one for Seller. Perhaps you want to postpone initializing the user type before this.
             //If we can use threads maybe we can 
             //Synchronously run two threads for each ArrayList? Or we can just: 
@@ -130,6 +215,8 @@ public class Market {
             } while (!isUserFound);
             and perhaps make create account if (choice == 2 || !isUserFound)
             */
+            
+            
         } else if (choice == 2) { //Create an account
             do {
                 System.out.println(SELLORCUST);
@@ -258,7 +345,8 @@ public class Market {
                     stayInMenu = true;
 
                 } else if (choice == 2) {
-                    //MARKETPLACE
+                    //PRINT MARKETPLACE
+
 
 
                 } else if (choice == 3) {
