@@ -5,9 +5,14 @@ public class Store {
     private ArrayList<Customer> customers;
     private double revenue;
     private int sales;
+    
+    private String sellerName;
+    private String sellerEmail;
 
-    public Store(String name) {
+    public Store(String name, String sellerName, String sellerEmail) {
         this.name = name;
+        this.sellerName = sellerName;
+        this.sellerEmail = sellerEmail;
         goods = new ArrayList<>();
         customers = new ArrayList<>();
         revenue = 0.00;
@@ -65,6 +70,21 @@ public class Store {
         }
         return store;
         //to print in the market   
+    }
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
+    }
+
+    public String getSellerEmail() {
+        return sellerEmail;
+    }
+
+    public void setSellerEmail(String sellerEmail) {
+        this.sellerEmail = sellerEmail;
     }
     
 }
