@@ -50,6 +50,9 @@ public class Seller extends User{
     public void addStore(Store store) {
         storeList.add(store);
     }
+    public ArrayList<Store> getStore() {
+        return (storeList);
+    }
     public void assignProduct(String fileName, Store store) throws FileNotFoundException {
         File file = new File(fileName);
         if (!file.exists()) {
