@@ -10,6 +10,7 @@ public class Market {
     public static final String NOUSER = "No user found with given credentials!";
     public static final String TRYAGAIN = "Would you like to try again?";
     public static final String ENTERPSWD = "Please enter your password.";
+    public static final String EMAILEXISTS = "A user already exists with this username!";
 
     public static final String HI = "Welcome back!";
     public static final String BYE = "Sorry to see you go!";
@@ -52,12 +53,29 @@ public class Market {
 
         return marketString;
     }
+    public static boolean doesEmailExist(ArrayList<User> customersList, ArrayList<User> sellersList, String email) {
+        boolean emailExists = false;
+        for (int i = 0; i < sellersList.size(); i++) {
+            if (email.equals(sellersList.get(i).getEmail())) {
+                emailExists = true;
+            }
+        }
+        for (int i = 0; i < customersList.size(); i++) {
+            if (email.equals(customersList.get(i).getEmail())) {
+                emailExists = true;
+            }
+        }
+        return emailExists;
+    }
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         int choice = -1; //scanner choice
         boolean invalidChoice = false; //the boolean I'll use for do-while loops to check invalid input
         boolean stayInMenu = true;
+        boolean emailExists = false; //does an email already exist for this user
+        boolean seller; //if true, user is a seller, if false, user is a customer
+
 
         ArrayList<User> customersList = new ArrayList<>();
         ArrayList<User> sellersList = new ArrayList<>();
@@ -74,13 +92,13 @@ public class Market {
 
         System.out.println(WELCOME);
         do {
-            /* this code is to test functionality without file IO
+            //this code is to test functionality without file IO
             customersList.add(new Customer("sofia@gmail.com", "sofia", "sofia"));
             customersList.add(new Customer("email2", "name2", "password2"));
             customersList.add(new Customer("email3", "name3", "password3"));
             sellersList.add(new Seller("email4", "name4", "password4"));
             sellersList.add(new Seller("email5", "name5", "password5"));
-            */
+
             System.out.println(LOGIN);
             System.out.println(YESNO);
             try {
@@ -151,72 +169,7 @@ public class Market {
 
             } while (!matches);
 
-            //other, optional way to validate
-            //I have two ArrayLists, one for Customer and one for Seller. Perhaps you want to postpone initializing the user type before this.
-            //If we can use threads maybe we can 
-            //Synchronously run two threads for each ArrayList? Or we can just: 
-            /*
-            boolean isUserFound = false;
-            do {
-                System.out.println(ENTERLOGIN);
-                String email = scan.nextLine();
-                for (Customer customerRegistered : customers) {
-                    if (customerRegistered.getEmail.equals(email)) {
-                        do {
-                            System.out.println(ENTERPSWD);
-                            String password = scan.nextLine();
-                            if (customerRegistered.getPassword.equals(password)) {
-                                System.out.println(HI);
-                                Customer currentUser = customerRegistered;
-                                isUserFound = true;
-                            } else {
-                                System.out.println(NOPSWD);
-                            }
-                            if (!isUserFound) {
-                                //should give them an option to force-quit.
-                            }
-                        } while (!isUserFound);
-                        break;
-                    }
-                }
-                if (!isUserFound) {
-                    for (Seller sellerRegistered : sellers) {
-                        if (sellerRegistered.getEmail.equals(email)) {
-                            do {
-                                System.out.println(ENTERPSWD);
-                                String password = scan.nextLine();
-                                if (sellerRegistered.getPassword.equals(password)) {
-                                    System.out.println(HI);
-                                    Seller currentUser = sellerRegistered;
-                                    isUserFound = true;
-                                } else {
-                                    System.out.println(NOPSWD);
-                                }
-                                if (!isUserFound) {
-                                    //Should give them an option to force-quit.
-                                }
-                            } while (!isUserFound);
-                            break;
-                        }
-                    }   
-                }
-                if (!isUserFound) {
-                    System.out.println(NOUSER);
-                    System.out.println("Would you like to re-enter your email?");
-                    if (!scan.nextLine.toLowerCase().equals("yes")) {
-                        System.out.println("Would you like to create a new account?");
-                        if (scan.nextLine.toLowerCase().equals("yes")) {
-                            break;
-                        } else {
-                            //add early termination method
-                        }
-                    }
-                }
-            } while (!isUserFound);
-            and perhaps make create account if (choice == 2 || !isUserFound)
-            */
-            
-            
+
         } else if (choice == 2) { //Create an account
             do {
                 System.out.println(SELLORCUST);
@@ -233,28 +186,56 @@ public class Market {
                     System.out.println(ENTERVALID);
                 }
             } while (invalidChoice);
-            if (choice == 1) { //customer
-                System.out.println(ENTERNAME);
-                String name = scan.nextLine();
-                System.out.println(ENTERLOGIN);
-                String email = scan.nextLine();
-                System.out.println(ENTERPSWD);
-                String password = scan.nextLine();
-                //TODO check and make sure the email isn't the same as anyone else
-                currentUser = new Customer(email, name, password);
-
-            } else { //seller
-                System.out.println(ENTERNAME);
-                String name = scan.nextLine();
-                System.out.println(ENTERLOGIN);
-                String email = scan.nextLine();
-                System.out.println(ENTERPSWD);
-                String password = scan.nextLine();
-                //TODO check and make sure the email isn't the same as anyone else
-
-                currentUser = new Seller(email, name, password);
+            if (choice == 1) { //user is a customer
+                seller = false;
+            } else {
+                seller = true; //user is a seller
             }
 
+            System.out.println(ENTERNAME);
+            String name = scan.nextLine();
+            System.out.println(ENTERLOGIN);
+            String email = scan.nextLine();
+            System.out.println(ENTERPSWD);
+            String password = scan.nextLine();
+            do {
+                if (emailExists) {
+                    System.out.println(ENTERLOGIN);
+                    email = scan.nextLine();
+                    emailExists = false;
+                }
+
+                emailExists = doesEmailExist(customersList, sellersList, email);
+                if (emailExists) {
+                    System.out.println(EMAILEXISTS);
+                    do {
+                        System.out.println("Would you like to enter a different email?");
+                        System.out.println(YESNO);
+                        try {
+                            choice = Integer.parseInt(scan.nextLine());
+                            if (choice != 1 && choice != 2) {
+                                invalidChoice = true;
+                                System.out.println(ENTERVALID);
+                            } else {
+                                invalidChoice = false;
+                            }
+                        } catch (NumberFormatException e) {
+                            invalidChoice = true;
+                            System.out.println(ENTERVALID);
+                        }
+                    } while (invalidChoice);
+                    if (choice == 2) {
+                        System.out.println(BYE);
+                        return;
+                    }
+                }
+            } while (emailExists);
+
+            if (!seller) { //customer
+                currentUser = new Customer(email, name, password);
+            } else { //seller
+                currentUser = new Seller(email, name, password);
+            }
         }
         //NOW CODE FOR RUNNING MARKETPLACE, ETC
 
@@ -357,7 +338,6 @@ public class Market {
 
 
         } else if (currentUser instanceof Seller) {
-
 
         } else {
             System.out.println("User was not initialized");
