@@ -68,8 +68,8 @@ public class Seller extends User{
                     //Assuming the csv file is in name, price, quantity, description format
                     store.addGoods(new Products(lineBreak[0], Double.parseDouble(lineBreak[1]),
                             Integer.parseInt(lineBreak[2]), lineBreak[3], 0, store.getName())); //edit; store name added to the parameter & field of Products
-                } catch (Exception e) {
-                    System.out.println("Wrong file format!");
+                } catch (Exception e) {                                                         //another edit made to initialize sale as int
+                    System.out.println("Wrong file format!");                                   //better when we work with initialization from file IO
                     break;
                 }
             }
