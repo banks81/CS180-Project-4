@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Customer extends User {
-    private ArrayList<String> pastPurchase;
+    private ArrayList<String> pastPurchase; //edit made, if the code is made under the assumption this is a Products class please let me know
     private ArrayList<Integer> purchaseCount;
     public Customer(String email, String name, String password) {
         super(email, name, password);
