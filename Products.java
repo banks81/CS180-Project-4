@@ -4,13 +4,15 @@ public class Products {
     private int quantity;
     private String description;
     private int sales;
+    private String storeName; //edit; store name added as a parameter to allow backtracking if necessary
 
-    public Products(String name, double price, int quantity, String description) {
+    public Products(String name, double price, int quantity, String description, int sales, String storeName) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
-        sales = 0;
+        this.storeName = storeName;
+        this.sales = sales; //allow sales to be inputted directly
     }
 
     public String getName() {
@@ -51,6 +53,13 @@ public class Products {
 
     public void setSales(int sales) {
         this.sales = sales;
+    }
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
     
     public String toString() {
