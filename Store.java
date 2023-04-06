@@ -9,7 +9,7 @@ public class Store {
     private String sellerName;
     private String sellerEmail;
 
-    public Store(String name, String sellerName, String sellerEmail) {
+    public Store(String name, String sellerName, String sellerEmail) {  //edit; sellerName and sellerEmail as a parameter.
         this.name = name;
         this.sellerName = sellerName;
         this.sellerEmail = sellerEmail;
