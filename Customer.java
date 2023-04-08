@@ -3,6 +3,19 @@ import java.util.ArrayList;
 public class Customer extends User {
     private ArrayList<String> pastPurchase; //edit made, if the code is made under the assumption this is a Products class please let me know
     private ArrayList<Integer> purchaseCount;
+
+    public void setShoppingCart(ArrayList<Products> shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    public ArrayList<String> getShoppingCartChanges() {
+        return shoppingCartChanges;
+    }
+
+    public void setShoppingCartChanges(ArrayList<String> shoppingCartChanges) {
+        this.shoppingCartChanges = shoppingCartChanges;
+    }
+
     private ArrayList<Products> shoppingCart;
     private ArrayList<String> shoppingCartChanges;
 
@@ -17,10 +30,6 @@ public class Customer extends User {
     public ArrayList<Products> getShoppingCart() {
         return shoppingCart;
     }
-    public ArrayList<String> getShoppingCartChanges() {
-        return shoppingCartChanges;
-    }
-    
     public void addToShoppingCart(Products products) {
         shoppingCart.add(products);
     }
@@ -52,9 +61,9 @@ public class Customer extends User {
         pastPurchase.add(products);
         purchaseCount.add(purchases);
     }
-    
+
     public void shoppingCartChangeHelper(String productname, int errorCode) {
-        Stringbuilder errorMessage = new Stringbuilder();
+        StringBuilder errorMessage = new StringBuilder();
         switch (errorCode) {
             case 1 :    //out of stock
                 errorMessage.append(String.format("The item %s is out of stock!", productname));
@@ -66,7 +75,7 @@ public class Customer extends User {
                 errorMessage.append(String.format("Unknown error!"));
                 break;
         }
-        errorMessage.append("\nItem %s has been removed from your shopping cart.", productname);
+        errorMessage.append(String.format("\nItem %s has been removed from your shopping cart.", productname));
         shoppingCartChanges.add(errorMessage.toString());
     }
 }
