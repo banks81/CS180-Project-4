@@ -59,7 +59,19 @@ public class Customer extends User {
         }
     }
     
-    public void shoppingCartChangeHelper(String productName) {
-        return (String.format("The item %s could not be found in our database. It has been removed from your shopping cart."), productName);
+    public void shoppingCartChangeHelper(String productname, int errorCode) {
+        Stringbuilder errorMessage = new Stringbuilder()
+        switch (errorCode) {
+            case 1 :    //out of stock
+                errorMessage.append(String.format("The item %s is out of stock!", productname));
+                break;
+            case 2 :    //not found on database
+                errorMessage.append(String.format("The item %s is not found in our database.", productname));
+                break;
+            default :
+                errorMessage.append(String.format("Unknown error!"));
+        }
+        errorMessage.append("\nItem %s has been removed from your shopping cart.", productname);
+        shoppingCartChanges.add(errorMessage.toString());
     }
 }
