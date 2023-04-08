@@ -63,8 +63,10 @@ public class Products {
     }
     
     public String toString() {
-        return String.format("Product Name: " + getName() + ", Description: " + getDescription()
-        + ", Quantity Available: " + getQuantity() + ", Price: " + getPrice());
+        return String.format("Product Name: " + getName() + ", Store name: " + getStoreName() + "" +
+                           "\n              Product Description: " + getDescription()
+                + "\n              Quantity Available: " + getQuantity() + ", Price: " + getPrice());
+    }
     }
     
 }
