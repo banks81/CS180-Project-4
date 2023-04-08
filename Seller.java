@@ -13,37 +13,6 @@ public class Seller extends User{
     * Dashboard for displaying stores
     *
     * */
-    //FIX IN TERMS OF "SORTING"
-    public String dashboard() {
-        StringBuilder total = new StringBuilder();
-        for (int i = 0; i < storeList.size(); i++) {
-            Store store = storeList.get(i);
-            total.append(String.format("--------------------\nStore name: %s\nItems: \n", store.getName()));
-            for (int j = 0; j < store.getGoods().size(); j++) {
-                Products item = store.getGoods().get(j);
-                total.append(String.format("  %s, sold %d time", item.getName(), item.getSales()));
-                if (item.getSales() > 1) {
-                    total.append(String.format("s\n"));
-                } else {
-                    total.append(String.format("\n"));
-                }
-            }
-            total.append(String.format("Customers: \n"));
-            StringBuilder customerList = new StringBuilder();
-            for (int j = 0; j < store.getCustomers().size(); j++) {
-                Customer currentCust = store.getCustomers().get(j);
-                if (customerList.length() > 70) {
-                    customerList.append(String.format("\n"));
-                }
-                customerList.append(String.format("%s, ", currentCust.getName()));
-            }
-            customerList.delete(customerList.length() - 1, customerList.length());
-            total.append(customerList.toString());
-
-            total.append(String.format("\nRevenue: $%.2f\n", store.getRevenue()));
-        }
-        return total.toString();
-    }
     public void newStore(String storeName) {
         storeList.add(new Store(storeName, getName(), getEmail())); //edit; seller name and email added to field of the store so we may backtrack?
     }
