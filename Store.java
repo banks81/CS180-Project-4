@@ -181,7 +181,13 @@ public class Store {
                     getGoods().remove(getGoods().get(choice - 1));
                     System.out.println("Product successfully removed!");
                 } else if (choice == 6){
-                    // TODO import product csv file
+                    System.out.println("Enter the name of the file: ");
+                    String fileName = scan.nextLine();
+                    try {
+                        assignProduct(fileName);
+                    } catch (FileNotFoundException e){
+                        System.out.println("File not found!");
+                    }
                 } else if (choice == 7){
                     // TODO export product csv file
                 } else if (choice == 8){
@@ -189,6 +195,34 @@ public class Store {
                 }
         } while (true);
         
+    }
+    public void assignProduct(String fileName) throws FileNotFoundException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            throw new FileNotFoundException();
+        }
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            while (true) {
+                String eachLine = bufferedReader.readLine();
+                if (eachLine == null) {
+                    break;
+                }
+                try {
+                    String[] lineBreak = eachLine.split(",");
+                    //Assuming the csv file is in name, price, quantity, description format
+                    addGoods(new Products(lineBreak[0], Double.parseDouble(lineBreak[1]),
+                            Integer.parseInt(lineBreak[2]), lineBreak[3], 0, getName())); //edit; store name added to the parameter & field of Products
+                } catch (Exception e) {                                                         //another edit made to initialize sale as int
+                    System.out.println("Wrong file format!");                                   //better when we work with initialization from file IO
+                    break;
+                }
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     
