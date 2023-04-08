@@ -87,9 +87,25 @@ public class Seller extends User{
                 String storeName = scan.nextLine();
                 storeList.add(new Store(storeName, getName(), getEmail()));
             } else if (choice == 3){
-                // TODO edit booth
+                int count = 0;
+                System.out.println("Which booth would you like to edit?");
+                for (Store store : storeList){
+                    count++;
+                    System.out.println(count + ". " + store.getName());
+                }
+                choice = checkChoice(scan, storeList.size());
+                getStore().get(choice - 1).editStore(scan);
+                System.out.println("Booth successfully edited!");
             } else if (choice == 4){
-                // TODO remove booth
+                int count = 0;
+                System.out.println("Which booth would you like to remove?");
+                for (Store store : storeList){
+                    count++;
+                    System.out.println(count + ". " + store.getName());
+                }
+                choice = checkChoice(scan, storeList.size());
+                getStore().remove(getStore().get(choice - 1));
+                System.out.println("Booth successfully removed!");
             }
             else if (choice == 5){
                 break;
