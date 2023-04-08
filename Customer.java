@@ -45,18 +45,8 @@ public class Customer extends User {
     }
 
     public void addProducts(String products, int purchases) {
-        int index = 0;
-        for (String product : pastPurchase) {
-            if (product.equals(products)) {
-                purchaseCount.set(index, purchaseCount.get(index) + purchases);
-                break;
-            }
-            index++;
-        }
-        if (index == pastPurchase.size()) {
-            pastPurchase.add(products);
-            purchaseCount.add(purchases);
-        }
+        pastPurchase.add(products);
+        purchaseCount.add(purchases);
     }
     
     public void shoppingCartChangeHelper(String productname, int errorCode) {
@@ -68,7 +58,7 @@ public class Customer extends User {
             case 2 :    //not found on database
                 errorMessage.append(String.format("The item %s is not found in our database.", productname));
                 break;
-            default :
+            default :   //This should NOT be the case
                 errorMessage.append(String.format("Unknown error!"));
                 break;
         }
