@@ -8,6 +8,11 @@
         * pastPurchaseitem2,quantity
         * ...
         * --------
+        * shoppingcartitem1, storename
+        * shoppingcartitem2, storename
+        * shoppingcartitem3, storename
+        * ...
+        * --------
         * Seller, email, name, password
         * -------- <<this must always come after each user desc
         * ...
@@ -17,8 +22,9 @@
         * must have -------- at the end
         * */
         File users = new File("UsersList.txt");
-        customers = new ArrayList<>();
-        sellers = new ArrayList<>();
+        ArrayList<Customer> customers = new ArrayList<>();
+        ArrayList<Seller> sellers = new ArrayList<>();
+        ArrayList<String> customerTempCart = new ArrayList<>();
         try {
             FileReader fileReader = new FileReader(users);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -43,6 +49,16 @@
                             String[] pastPurchase = productsList.split(",");
                             customerCurrent.addProducts(pastPurchase[0], Integer.parseInt(pastPurchase[1]));
                         }
+                        Stringbuilder customerCartBuild = new Stringbuilder();
+                        while (true) {
+                            String shoppingList = bufferedReader.readLine();
+                            if (shoppingList.equals("--------")) {
+                                break;
+                            }
+                            customerCartBuild.append(shoppingList);
+                            customerCartBuild.append("\n");
+                        }
+                        customerTempCart.add(customerCartBuild.toString());
                         customers.add(customerCurrent);
                     } else {
                         Seller sellerCurrent = new Seller(firstLine[1], firstLine[1], firstLine[2]);
@@ -59,8 +75,8 @@
             System.out.println("Invalid file format!");
         }
         File storeList = new File("StoreList.txt");
-        stores = new ArrayList<>();
-        products = new ArrayList<>();
+        ArrayList<Store> stores = new ArrayList<>();
+        ArrayList<Products> products = new ArrayList<>();
         try {
             FileReader fileReader = new FileReader(storeList);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -132,6 +148,27 @@
         } catch (IOException e) {
             System.out.println("Invalid file format!");
         }
+        
+        for (int i = 0; i < customers.size(); i++) {
+            Customer currentCustomer = customers.get(i);
+            String[] customerCartContents = customerTempCart.get(i).split("\n");
+            for (int j = 0; j < customerCartContents.length; j++) {
+                boolean foundItem = false;
+                String[] itemDesc = customerCartContents.get(j).split(",");
+                String itemName = itemDesc[0];
+                String storeName = itemDesc[1];
+                for (Products productInQuestion : products) {
+                    if (productInQuestion.getName().equals(itemName) && productInQuestion.getStoreName().equals(storeName)) {
+                        currentCustomer.addToShoppingCart(productInQuestion);
+                        foundItem = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    currentCustomer.shoppingCartChangeHelper(itemName);
+                }
+            }
+        }
     }
 
     public void writeFile() {
@@ -144,6 +181,10 @@
                 printWriter.println("Customer," + customer.getEmail() + "," +  customer.getName() + "," + customer.getPassword());
                 for (int i = 0; i < customer.getPastPurchase().size(); i++) {
                     printWriter.println(customer.getPastPurchase().get(i) + "," + customer.getPurchaseCount().get(i));
+                }
+                printWriter.println("--------");
+                for (int j = 0; j < customer.getShoppingCart.size(); j++) {
+                    printWriter.println(customer.shoppingCart().get(i).getName() + "," + customer.shoppingCart().get(i).getStoreName());
                 }
                 printWriter.println("--------");
             }
