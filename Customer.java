@@ -60,7 +60,7 @@ public class Customer extends User {
     }
     
     public void shoppingCartChangeHelper(String productname, int errorCode) {
-        Stringbuilder errorMessage = new Stringbuilder()
+        Stringbuilder errorMessage = new Stringbuilder();
         switch (errorCode) {
             case 1 :    //out of stock
                 errorMessage.append(String.format("The item %s is out of stock!", productname));
@@ -70,6 +70,7 @@ public class Customer extends User {
                 break;
             default :
                 errorMessage.append(String.format("Unknown error!"));
+                break;
         }
         errorMessage.append("\nItem %s has been removed from your shopping cart.", productname);
         shoppingCartChanges.add(errorMessage.toString());
