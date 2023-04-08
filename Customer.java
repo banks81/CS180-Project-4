@@ -4,12 +4,14 @@ public class Customer extends User {
     private ArrayList<String> pastPurchase; //edit made, if the code is made under the assumption this is a Products class please let me know
     private ArrayList<Integer> purchaseCount;
     private ArrayList<Products> shoppingCart;
+    private ArrayList<String> shoppingCartChanges;
 
     public Customer(String email, String name, String password) {
         super(email, name, password);
         pastPurchase = new ArrayList<>();
         purchaseCount = new ArrayList<>();
         shoppingCart = new ArrayList<>();
+        shoppingCartChanges = new ArrayList<>();
 
     }
     public ArrayList<Products> getShoppingCart() {
@@ -55,5 +57,9 @@ public class Customer extends User {
             pastPurchase.add(products);
             purchaseCount.add(purchases);
         }
+    }
+    
+    public void shoppingCartChangeHelper(String productName) {
+        return (String.format("The item %s could not be found in our database. It has been removed from your shopping cart."), productName);
     }
 }
