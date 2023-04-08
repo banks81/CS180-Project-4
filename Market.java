@@ -831,7 +831,7 @@ public class Market {
 
 
                 } else if (currentUser instanceof Seller) {
-                    System.out.println("Farmer");
+                    ((Seller) currentUser).sellerMainMenu(scan);
                 } else {
                     System.out.println("User was not initialized");
                 }
