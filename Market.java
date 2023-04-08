@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Collections;
 public class Market {
     public static final String WELCOME = "Welcome to the CS 180 Farmer's Market!";
     public static final String LOGIN = "Are you an existing user?";
@@ -128,11 +129,11 @@ public class Market {
             customersList.add(new Customer("email3", "name3", "password3"));
             sellersList.add(new Seller("email4", "name4", "password4"));
             sellersList.add(new Seller("email5", "name5", "password5"));
-            productsList.add(new Products("product1", 1, 2, "product1 d",
+            productsList.add(new Products("product1", 3, 2, "product1 d",
                     3, "store1"));
             productsList.add(new Products("product2", 2, 3, "product2 d",
                     4, "store1" ));
-            productsList.add(new Products("product3", 3, 1, "product3 d",
+            productsList.add(new Products("product3", 1, 1, "product3 d",
                     2, "store2"));
 
             System.out.println(LOGIN);
@@ -384,7 +385,7 @@ public class Market {
                 } while (stayInMenu);
                 stayInMenu = true;
 
-            } else if (choice == 2) {
+            } else if (choice == 2) { //Farmer's Market Main Menu
                 //PRINT MARKETPLACE
                 if (currentUser instanceof Customer) {
 
@@ -508,20 +509,197 @@ public class Market {
                                 } while (stayInProductMenu);
 
 
-                            } case 2 -> { //search for specific products
+                            } case 2 -> {                   //SEARCH FOR PRODUCTS
+                                int stayInSearchMenu;
+                                ArrayList<Products> foundProducts = new ArrayList<>();
+                                int foundProductCounter = 0;
+                                int userSelection;
+
+                                do { //Loop to continue making searches
+                                    System.out.println("What product are you looking for?");
+                                    String productSearch = scan.nextLine();
+
+                                    //Loop to look for searched keyword in every product description, name, and store name
+                                    System.out.println("Search Results:");
+                                    for (int i = 0; i < productsList.size(); i++) {
+                                        if (productsList.get(i).getName().contains(productSearch) ||
+                                                productsList.get(i).getStoreName().contains(productSearch) ||
+                                                productsList.get(i).getDescription().contains(productSearch)) {
+                                            foundProductCounter++;
+                                            foundProducts.add(productsList.get(i));
+                                            System.out.println(foundProductCounter + ". " + productsList.get(i).getName());
+                                        }
+                                    }
+                                    if (foundProducts.isEmpty())
+                                        System.out.println("Sorry, your search yielded no results");
+                                    else {
+                                        //Ask the user to make a selection
+                                        userSelection = -1;
+                                        do {
+                                            System.out.println("Select which product you'd like to view!");
+                                            try {
+                                                userSelection = Integer.parseInt(scan.nextLine());
+                                                if (userSelection < 1 || userSelection > foundProducts.size()) {
+                                                    invalidChoice = true;
+                                                    System.out.println(ENTERVALID);
+                                                } else {
+                                                    invalidChoice = false;
+                                                }
+                                            } catch (NumberFormatException e) {
+                                                invalidChoice = true;
+                                                System.out.println(ENTERVALID);
+                                            }
+                                        } while(invalidChoice);
+
+                                        //Show Selected product
+                                        System.out.println(foundProducts.get(userSelection-1));
+                                    }
+
+                                    //Ask if user wants to search again, if so stay in loop
+                                    do {
+                                        stayInSearchMenu = -1;
+                                        System.out.println("Would you like to make another search?");
+                                        System.out.println(YESNO);
+                                        try {
+                                            stayInSearchMenu = Integer.parseInt(scan.nextLine());
+                                            if (stayInSearchMenu != 1 && stayInSearchMenu != 2) {
+                                                invalidChoice = true;
+                                                System.out.println(ENTERVALID);
+                                            } else {
+                                                invalidChoice = false;
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            invalidChoice = true;
+                                            System.out.println(ENTERVALID);
+                                        }
+                                    } while (invalidChoice);
+                                } while (stayInSearchMenu == 1);
+
+
 
                             } case 3 -> { //sort the products by price, lowest to highest
+                                ArrayList<Products> tempArr = new ArrayList<>();
+                                double min;
+                                int minInd;
+
+                                while (!productsList.isEmpty()) { //Empties out the entire list, sorting each removed element into the temp array
+                                    min = productsList.get(0).getPrice();
+                                    minInd = 0;
+
+                                    //For loop through all products - find minimum price, then add that to the sorted
+                                    //array and remove it from the original array
+                                    for (int i = 0; i < productsList.size(); i++) {
+                                        if (productsList.get(i).getPrice() < min) {
+                                            min = productsList.get(i).getPrice();
+                                            minInd = i;
+                                        }
+                                    }
+                                    tempArr.add(productsList.get(minInd));
+                                    productsList.remove(minInd);
+                                }
+                                productsList = new ArrayList<>(tempArr); //Set the original array equal to the sorted temp array
+                                System.out.println("Products have been sorted from lowest to highest price!");
 
                             } case 4 -> { //sort the products by quantity available, lowest to highest
+                                ArrayList<Products> tempArr = new ArrayList<>();
+                                double min;
+                                int minInd;
+                                while (!productsList.isEmpty()) { //Empties out the entire list, sorting each removed element into the temp array
+                                    min = productsList.get(0).getQuantity();
+                                    minInd = 0;
+
+                                    //For loop through all products - find minimum quantity, then add that to the sorted
+                                    //array and remove it from the original array
+                                    for (int i = 0; i < productsList.size(); i++) {
+                                        if (productsList.get(i).getQuantity() < min) {
+                                            min = productsList.get(i).getQuantity();
+                                            minInd = i;
+                                        }
+                                    }
+                                    tempArr.add(productsList.get(minInd));
+                                    productsList.remove(minInd);
+                                }
+                                productsList = new ArrayList<>(tempArr); //Set the original array equal to the sorted temp array
+                                System.out.println("Products have been sorted from lowest to highest quantity available!");
 
                             } case 5 -> { //view your purchase history
+                                ArrayList<String> tempStringArr = ((Customer) currentUser).getPastPurchase();
+
+                                if (tempStringArr.isEmpty())
+                                    System.out.println("You have no previous purchases.");
+                                else {
+                                    System.out.println("Previous purchases:");
+                                    for (int i = 0; i < tempStringArr.size(); i++) {
+                                        System.out.println((i + 1) + ". " + tempStringArr.get(i));
+                                    }
+                                }
 
                             } case 6 -> { //view your shopping cart
+                                //Retrieve the private shopping cart list through a temp list
+                                ArrayList<Products> tempProductsArr = ((Customer) currentUser).getShoppingCart();
+                                //Print out the list
+                                if (tempProductsArr.isEmpty()) {
+                                    System.out.println("You have nothing in your shopping cart.");
+                                    stayInMarketMenu = true;
+                                }
+                                else {
+                                    System.out.println("Shopping cart:");
+                                    for (int i = 0; i < tempProductsArr.size(); i++) {
+                                        System.out.println((i + 1) + ". " + tempProductsArr.get(i));
+                                    }
 
+
+                                    //Get input on what action the user would like to take
+                                    int userSelection = 0;
+                                    do {
+                                        System.out.println("What would you like to do?\n1. Purchase cart\n2. Remove an item\n3. Return to Market Menu");
+                                        try {
+                                            userSelection = Integer.parseInt(scan.nextLine());
+                                            if (userSelection < 1 || userSelection > 3) {
+                                                invalidChoice = true;
+                                                System.out.println(ENTERVALID);
+                                            } else {
+                                                invalidChoice = false;
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            invalidChoice = true;
+                                            System.out.println(ENTERVALID);
+                                        }
+                                    } while (invalidChoice);
+
+                                    if (userSelection == 1) { //PURCHASE CART
+                                        //TODO IMPLEMENT PURCHASING
+                                    } else if (userSelection == 2) { //REMOVE AN ITEM FROM CART
+                                        //Get input on which item to remove
+                                        userSelection = 0;
+                                        do {
+                                            System.out.println("Which item would you like to remove?");
+                                            try {
+                                                userSelection = Integer.parseInt(scan.nextLine());
+                                                if (userSelection < 1 || userSelection > tempProductsArr.size()) {
+                                                    invalidChoice = true;
+                                                    System.out.println(ENTERVALID);
+                                                } else {
+                                                    invalidChoice = false;
+                                                }
+                                            } catch (NumberFormatException e) {
+                                                invalidChoice = true;
+                                                System.out.println(ENTERVALID);
+                                            }
+                                        } while (invalidChoice);
+
+                                        //Remove inputted item
+                                        ((Customer) currentUser).removeFromShoppingCart(tempProductsArr.get(userSelection - 1));
+
+                                    } else { //BACK TO MARKET MENU
+                                        stayInMarketMenu = true;
+                                    }
+                                }
                             } case 7 -> { //go back to main menu
-
+                                stayInMarketMenu = false;
                             } case 8 -> { //quit
-                
+                                stayInMarketMenu = false;
+                                stayInMenu = false;
                             }
                         } //end of switch statement
 
@@ -542,13 +720,6 @@ public class Market {
                 return;
             }
         } while (stayInMenu);
-
-
-
-
     }
-
-
-
 
 }
