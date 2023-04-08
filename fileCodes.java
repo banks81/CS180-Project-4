@@ -154,18 +154,27 @@
             String[] customerCartContents = customerTempCart.get(i).split("\n");
             for (int j = 0; j < customerCartContents.length; j++) {
                 boolean foundItem = false;
+                boolean inStock = false;
                 String[] itemDesc = customerCartContents.get(j).split(",");
                 String itemName = itemDesc[0];
                 String storeName = itemDesc[1];
                 for (Products productInQuestion : products) {
                     if (productInQuestion.getName().equals(itemName) && productInQuestion.getStoreName().equals(storeName)) {
-                        currentCustomer.addToShoppingCart(productInQuestion);
+                        if (productInQuestion.getQuantity() > 0) {
+                            inStock = true;
+                        } else {
+                            inStock = false;
+                        }
                         foundItem = true;
                         break;
                     }
-                }
-                if (!found) {
-                    currentCustomer.shoppingCartChangeHelper(itemName);
+                    if (foundItem && inStock) {
+                        currentCustomer.addToShoppingCart(productInQuestion);
+                    } else if (foundItem && !inStock) {
+                        currentCustomer.shoppingCartChangeHelper(itemName, 1);
+                    } else {
+                        currentCustomer.shoppingCartChangeHelper(itemName, 2);
+                    }
                 }
             }
         }
