@@ -86,5 +86,110 @@ public class Store {
     public void setSellerEmail(String sellerEmail) {
         this.sellerEmail = sellerEmail;
     }
+    public int checkChoice(Scanner scan, int lastNum){
+        int choice;
+        do {
+            try {
+                choice = Integer.parseInt(scan.nextLine());
+                if (choice > 0 && choice < lastNum + 1){
+                    return choice;
+                }
+            } catch (NumberFormatException e){
+                System.out.println("Please enter a valid option!");
+            }
+        } while (true);
+    }
+    public int checkInt(Scanner scan){
+        int choice;
+        do {
+            try {
+                choice = Integer.parseInt(scan.nextLine());
+                return choice;
+            } catch (NumberFormatException e){
+                System.out.println("Please enter a valid option!");
+            }
+        } while (true);
+    }
+    public double checkDouble(Scanner scan){
+        double choice;
+        do {
+            try {
+                choice = Double.parseDouble(scan.nextLine());
+                return choice;
+            } catch (NumberFormatException e){
+                System.out.println("Please enter a valid option!");
+            }
+        } while (true);
+    }
+    /*
+     * View store code
+     */
+    public void viewStore(Scanner scan) {
+        int choice;
+        do {
+            System.out.println("Booth: " + name);
+            System.out.println("1. View products");
+            System.out.println("2. View sales");
+            System.out.println("3. Add product");
+            System.out.println("4. Edit product");
+            System.out.println("5. Remove product");
+            System.out.println("6. Import product csv file");
+            System.out.println("7. Export product csv file");
+            System.out.println("8. Go back");
+            choice = checkChoice(scan, 8);
+            if (choice == 1) {
+                    int count = 0;
+
+                    for (Products good : goods){
+                        count++;
+                        System.out.println(good.toString());
+                    }
+                    if (count == 0){
+                        System.out.println("No products found!");
+                    }
+                } else if (choice == 2){
+                    // TODO view the history of sales
+                } else if (choice == 3) {
+                    System.out.println("Enter the name of the product: ");
+                    String productName = scan.nextLine();
+                    System.out.println("Enter the description of the product: ");
+                    String productDescription = scan.nextLine();
+                    System.out.println("Enter the price of the product: ");
+                    double price = checkDouble(scan);
+                    System.out.println("Enter the quantity of the product: ");
+                    int quantity = checkInt(scan);
+                    addGoods(new Products(productName, price, quantity, productDescription, 0, name));
+                    System.out.println("Product successfully added!");
+                } else if (choice == 4){
+                    int count = 0;
+                    System.out.println("Which product would you like to edit?");
+                    for (Products good : goods){
+                        count++;
+                        System.out.println(count + ". " + good.getName());
+                    }
+                    choice = checkChoice(scan, goods.size());
+                    getGoods().get(choice - 1).editProduct(scan);
+                    System.out.println("Product successfully edited!");
+                } else if (choice == 5){
+                    int count = 0;
+                    System.out.println("Which product would you like to remove?");
+                    for (Products good : goods){
+                        count++;
+                        System.out.println(count + ". " + good.getName());
+                    }
+                    choice = checkChoice(scan, goods.size());
+                    getGoods().remove(getGoods().get(choice - 1));
+                    System.out.println("Product successfully removed!");
+                } else if (choice == 6){
+                    // TODO import product csv file
+                } else if (choice == 7){
+                    // TODO export product csv file
+                } else if (choice == 8){
+                    break;
+                }
+        } while (true);
+        
+    }
+
     
 }
