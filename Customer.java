@@ -17,6 +17,10 @@ public class Customer extends User {
     public ArrayList<Products> getShoppingCart() {
         return shoppingCart;
     }
+    public ArrayList<String> getShoppingCartChanges() {
+        return shoppingCartChanges;
+    }
+    
     public void addToShoppingCart(Products products) {
         shoppingCart.add(products);
     }
