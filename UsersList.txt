@@ -1,0 +1,29 @@
+Customer,email1,name1,password1
+PAST PURCHASE
+pastItem1,1
+pastItem2,2
+pastItem3,3
+--------
+SHOPPING CART
+cartItem1,store1
+cartItem2,store2
+cartItem3,store3
+--------
+Customer,email2,name2,password2
+SHOPPING CART
+cartItem2,store1
+cartItem3,store3
+--------
+Customer,email3,name3,password3
+PAST PURCHASE
+pastItem5,7
+pastItem2,2
+--------
+Customer,email4,name4,password4
+--------
+Seller,emailA,nameA,passwordA
+--------
+Seller,emailB,nameB,passwordB
+--------
+Seller,emailC,nameC,passwordC
+--------
