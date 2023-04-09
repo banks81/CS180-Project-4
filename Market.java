@@ -974,7 +974,7 @@ public class Market {
                             isAtDashline = true;
                             break;
                         }
-                        String[] productDetails = lineNext.split(",");
+                        String[] productDetails = lineNext.split(";;"); //Now splits if there is ;;
                         Products currentProduct = new Products(productDetails[0], Double.parseDouble(productDetails[1]), Integer.parseInt(productDetails[2]),
                                 productDetails[3], Integer.parseInt(productDetails[4]), storeName);
                         currentStore.addGoods(currentProduct);
@@ -1081,7 +1081,7 @@ public class Market {
                 if (!store.getGoods().isEmpty()) {
                     printWriter.println("PRODUCTSLIST");
                     for (Products product : store.getGoods()) {
-                        printWriter.printf("%s,%.2f,%d,%s,%d\n",product.getName(),product.getPrice(),product.getQuantity(),product.getDescription(),product.getSales());
+                        printWriter.printf("%s;;%.2f;;%d;;%s;;%d\n",product.getName(),product.getPrice(),product.getQuantity(),product.getDescription(),product.getSales());
                     }
                     printWriter.println("--------");
                 }
