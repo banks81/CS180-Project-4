@@ -362,9 +362,14 @@ public class Market {
                                 }
                             } while (invalidChoice);
                             if (choice == 1) {
-                                currentUser = null;
                                 System.out.println(BYE);
                                 System.out.println("We hope you join us again soon!");
+                                if (currentUser instanceof Customer) {
+                                    customersList.remove(currentUser);
+                                }
+                                if (currentUser instanceof Seller) {
+                                    sellersList.remove(currentUser);
+                                }
                                 writeFile();
                                 return;
                             } else {
