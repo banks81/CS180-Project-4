@@ -1,11 +1,13 @@
 import java.util.*;
+import java.io.*;
+import java.util.Scanner;
 public class Store {
     public String name;
     public ArrayList<Products> goods;
     private ArrayList<Customer> customers;
     private double revenue;
     private int sales;
-    
+
     private String sellerName;
     private String sellerEmail;
 
@@ -62,14 +64,14 @@ public class Store {
     public void addGoods(Products products) {
         getGoods().add(products);
     }
-    
+
     public String toMarketString() {
         String store = "Store Name: " + getName() + "\nProducts: \n";
         for (int i = 0; i < goods.size(); i++) {
             store = store + goods.get(i).toString() + "\n";
         }
         return store;
-        //to print in the market   
+        //to print in the market
     }
     public String getSellerName() {
         return sellerName;
@@ -138,63 +140,71 @@ public class Store {
             System.out.println("8. Go back");
             choice = checkChoice(scan, 8);
             if (choice == 1) {
-                    int count = 0;
+                int count = 0;
 
-                    for (Products good : goods){
-                        count++;
-                        System.out.println(good.toString());
-                    }
-                    if (count == 0){
-                        System.out.println("No products found!");
-                    }
-                } else if (choice == 2){
-                    // TODO view the history of sales
-                } else if (choice == 3) {
-                    System.out.println("Enter the name of the product: ");
-                    String productName = scan.nextLine();
-                    System.out.println("Enter the description of the product: ");
-                    String productDescription = scan.nextLine();
-                    System.out.println("Enter the price of the product: ");
-                    double price = checkDouble(scan);
-                    System.out.println("Enter the quantity of the product: ");
-                    int quantity = checkInt(scan);
-                    addGoods(new Products(productName, price, quantity, productDescription, 0, name));
-                    System.out.println("Product successfully added!");
-                } else if (choice == 4){
-                    int count = 0;
+                for (Products good : goods){
+                    count++;
+                    System.out.println(good.toString());
+                }
+                if (count == 0){
+                    System.out.println("No products found!");
+                }
+            } else if (choice == 2){
+                // TODO view the history of sales
+            } else if (choice == 3) {
+                System.out.println("Enter the name of the product: ");
+                String productName = scan.nextLine();
+                System.out.println("Enter the description of the product: ");
+                String productDescription = scan.nextLine();
+                System.out.println("Enter the price of the product: ");
+                double price = checkDouble(scan);
+                System.out.println("Enter the quantity of the product: ");
+                int quantity = checkInt(scan);
+                addGoods(new Products(productName, price, quantity, productDescription, 0, name));
+                System.out.println("Product successfully added!");
+            } else if (choice == 4){
+                int count = 0;
+                if (!goods.isEmpty()) {
                     System.out.println("Which product would you like to edit?");
-                    for (Products good : goods){
+                    for (Products good : goods) {
                         count++;
                         System.out.println(count + ". " + good.getName());
                     }
                     choice = checkChoice(scan, goods.size());
                     getGoods().get(choice - 1).editProduct(scan);
                     System.out.println("Product successfully edited!");
-                } else if (choice == 5){
-                    int count = 0;
+                } else {
+                    System.out.println("No products available to edit!");
+                }
+            } else if (choice == 5){
+                int count = 0;
+                if (!goods.isEmpty()) {
                     System.out.println("Which product would you like to remove?");
-                    for (Products good : goods){
+                    for (Products good : goods) {
                         count++;
                         System.out.println(count + ". " + good.getName());
                     }
                     choice = checkChoice(scan, goods.size());
                     getGoods().remove(getGoods().get(choice - 1));
                     System.out.println("Product successfully removed!");
-                } else if (choice == 6){
-                    System.out.println("Enter the name of the file: ");
-                    String fileName = scan.nextLine();
-                    try {
-                        assignProduct(fileName);
-                    } catch (FileNotFoundException e){
-                        System.out.println("File not found!");
-                    }
-                } else if (choice == 7){
-                    // TODO export product csv file
-                } else if (choice == 8){
-                    break;
+                } else {
+                    System.out.println("No products available to remove!");
                 }
+            } else if (choice == 6){
+                System.out.println("Enter the name of the file: ");
+                String fileName = scan.nextLine();
+                try {
+                    assignProduct(fileName);
+                } catch (FileNotFoundException e){
+                    System.out.println("File not found!");
+                }
+            } else if (choice == 7){
+                // TODO export product csv file
+            } else if (choice == 8){
+                break;
+            }
         } while (true);
-        
+
     }
     public void editStore(Scanner scan) {
         System.out.println("Enter the name of the booth: ");
@@ -230,5 +240,5 @@ public class Store {
         }
     }
 
-    
+
 }
