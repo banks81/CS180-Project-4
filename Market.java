@@ -13,7 +13,6 @@ public class Market {
     public static final String ENTERPSWD = "Please enter your password.";
     public static final String EMAILEXISTS = "A user already exists with this email!";
 
-    public static final String HI = "Welcome back!";
     public static final String BYE = "Sorry to see you go! Happy trails!";
     public static final String OPTIONS = "Please choose your option:";
     public static final String SELLORCUST = "Would you like to join as a\n1. Customer\n2. Farmer";
@@ -69,20 +68,6 @@ public class Market {
     public static final String PURCHASECART = "2. Purchase all";
     public static final String GOTOMARKETMENU = "3. Go back to the market";
 
-
-    public String toMarket(ArrayList<Store> stores) {
-        String marketString = "";
-        int counter = 1;
-        for (int i = 0; i < stores.size(); i++ ) {
-            for (int j = 0; j < stores.get(i).getGoods().size(); j++) {
-                marketString = marketString + counter + ". Store: " + stores.get(i).getName() +
-                        ", " + stores.get(i).getGoods().get(j).toString() + "\n";
-            }
-        }
-        // I did this really quickly -- it may be smarter to make it an array of strings to be printed
-
-        return marketString;
-    }
     public static boolean doesEmailExist(ArrayList<User> customersList, ArrayList<User> sellersList, String email) {
         boolean emailExists = false;
         for (int i = 0; i < sellersList.size(); i++) {
@@ -102,7 +87,7 @@ public class Market {
     public static ArrayList<Store> storesList = new ArrayList<>(); //arrayList of stores in the marketplace
     public static ArrayList<Products> productsList = new ArrayList<>();
     public static ArrayList<String> customerTempCart = new ArrayList<>();
-    
+
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         int choice = -1; //scanner choice
@@ -112,7 +97,7 @@ public class Market {
         boolean seller; //if true, user is a seller, if false, user is a customer
         boolean stayInMarketMenu = true;
         boolean stayInProductMenu = true; //boolean for the smaller end-menus after market menu
-    
+
         User currentUser = null; //the current user of the program
 
         //TODO here call the method that parses through the files and gets all the info
@@ -125,7 +110,7 @@ public class Market {
         System.out.println(WELCOME);
         do {
             //this code is to test functionality without file IO
-            customersList.add(new Customer("sofia@gmail.com", "sofia", "sofia"));
+            /*customersList.add(new Customer("sofia@gmail.com", "sofia", "sofia"));
             customersList.add(new Customer("email2", "name2", "password2"));
             customersList.add(new Customer("email3", "name3", "password3"));
             sellersList.add(new Seller("email4", "name4", "password4"));
@@ -138,7 +123,7 @@ public class Market {
                     2, "Radish store"));
             productsList.add(new Products("Cat", 1000, 4, "A single calico cat",
                     3, "Cat's cats"));
-
+            */
             System.out.println(LOGIN);
             System.out.println(YESNO);
             try {
@@ -204,6 +189,7 @@ public class Market {
                     } else {
                         System.out.println(BYE);
                         //TODO Every time before returning, run the method that writes info to the file
+                        writeFile();
                         return;
                     }
                 }
@@ -267,6 +253,7 @@ public class Market {
                     } while (invalidChoice);
                     if (choice == 2) {
                         System.out.println(BYE);
+                        writeFile();
                         return;
                     }
                 }
@@ -274,8 +261,10 @@ public class Market {
 
             if (!seller) { //customer
                 currentUser = new Customer(email, name, password);
+                customersList.add(currentUser);
             } else { //seller
                 currentUser = new Seller(email, name, password);
+                sellersList.add(currentUser);
             }
         }
         //NOW CODE FOR RUNNING MARKETPLACE, ETC
@@ -376,6 +365,7 @@ public class Market {
                                 currentUser = null;
                                 System.out.println(BYE);
                                 System.out.println("We hope you join us again soon!");
+                                writeFile();
                                 return;
                             } else {
                                 System.out.println("Ok!");
@@ -492,7 +482,7 @@ public class Market {
                                                         invalidChoice = false;
                                                         System.out.println("Purchasing " + purchaseQuantity + "...");
                                                         productsList.get(productSelection - 1).setQuantity(productsList.get(productSelection - 1).getQuantity()
-                                                        - purchaseQuantity);
+                                                                - purchaseQuantity);
                                                         ((Customer) currentUser).addProducts(productsList.get(productSelection - 1).getName(),
                                                                 purchaseQuantity);
 
@@ -531,6 +521,7 @@ public class Market {
                                             } while (invalidChoice);
                                             if (choice == 1) {
                                                 System.out.println(BYE);
+                                                writeFile();
                                                 return;
                                             } else {
                                                 System.out.println("Ok!");
@@ -666,7 +657,7 @@ public class Market {
                                         }
                                     } while (invalidChoice);
                                     timesThroughSearch++;
-                                    } while (stayInSearchMenu == 1);
+                                } while (stayInSearchMenu == 1);
 
 
 
@@ -780,7 +771,7 @@ public class Market {
                                                 //list of past purchased items
                                             } else {
                                                 System.out.println("Could not purchase one" + tempProductsArr.get(i).getName()
-                                                + ", out of stock!");
+                                                        + ", out of stock!");
 
                                             }
                                         }
@@ -821,7 +812,7 @@ public class Market {
                                 stayInMarketMenu = false;
                                 stayInMenu = false;
                                 System.out.println(BYE);
-                                //TODO write to file
+                                writeFile();
                                 return;
                             }
                         } //end of switch statement
@@ -840,6 +831,7 @@ public class Market {
 
             } else if (choice == 3) {
                 System.out.println(BYE);
+                writeFile();
                 return;
             }
         } while (stayInMenu);
@@ -1073,35 +1065,33 @@ public class Market {
         try {
             FileWriter fileWriter = new FileWriter(storeFile, false);
             PrintWriter printWriter = new PrintWriter(fileWriter);
-            for (User seller : sellersList) {
-                Seller sellerClassChanged = (Seller) seller;
-                for (Store store : sellerClassChanged.getStore()) {
-                    printWriter.println(store.getName());
-                    printWriter.println(store.getSellerEmail() + "," + store.getSellerName());
-                    printWriter.println(store.getRevenue());
-                    printWriter.println(store.getSales());
-                    if (!store.getCustomers().isEmpty()) {
-                        printWriter.println("CUSTOMERLIST");
-                        for (Customer customer : store.getCustomers()) {
-                            printWriter.println(customer.getName() + "," + customer.getEmail());
-                        }
-                        printWriter.println("--------");
+
+            for (Store store : storesList) {
+                printWriter.println(store.getName());
+                printWriter.println(store.getSellerEmail() + "," + store.getSellerName());
+                printWriter.println(store.getRevenue());
+                printWriter.println(store.getSales());
+                if (!store.getCustomers().isEmpty()) {
+                    printWriter.println("CUSTOMERLIST");
+                    for (Customer customer : store.getCustomers()) {
+                        printWriter.println(customer.getName() + "," + customer.getEmail());
                     }
-                    if (!store.getGoods().isEmpty()) {
-                        printWriter.println("PRODUCTSLIST");
-                        for (Products product : store.getGoods()) {
-                            printWriter.printf("%s,%.2f,%d,%s,%d\n", product.getName(), product.getPrice(), product.getQuantity(), product.getDescription(), product.getSales());
-                        }
-                        printWriter.println("--------");
+                    printWriter.println("--------");
+                }
+                if (!store.getGoods().isEmpty()) {
+                    printWriter.println("PRODUCTSLIST");
+                    for (Products product : store.getGoods()) {
+                        printWriter.printf("%s,%.2f,%d,%s,%d\n",product.getName(),product.getPrice(),product.getQuantity(),product.getDescription(),product.getSales());
                     }
-                    if (store.getCustomers().isEmpty() && store.getGoods().isEmpty()) {
-                        printWriter.println("--------");
-                    }
+                    printWriter.println("--------");
+                }
+                if (store.getCustomers().isEmpty() && store.getGoods().isEmpty()) {
+                    printWriter.println("--------");
                 }
             }
             printWriter.close();
         } catch (Exception e) {
             System.out.println("Program terminated.");
         }
-    }   
+    }
 }
