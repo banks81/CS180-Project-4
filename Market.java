@@ -82,6 +82,7 @@ public class Market {
         }
         return emailExists;
     }
+
     public static ArrayList<User> customersList = new ArrayList<>();
     public static ArrayList<User> sellersList = new ArrayList<>();
     public static ArrayList<Store> storesList = new ArrayList<>(); //arrayList of stores in the marketplace
