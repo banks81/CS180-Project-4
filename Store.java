@@ -196,6 +196,11 @@ public class Store {
         } while (true);
         
     }
+    public void editStore(Scanner scan) {
+        System.out.println("Enter the name of the booth: ");
+        String productName = scan.nextLine();
+        setName(productName);
+    }
     public void assignProduct(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
         if (!file.exists()) {
