@@ -937,9 +937,9 @@ public class Market {
                 String[] sellerDesc = bufferedReader.readLine().split(",");
                 String sellerName = sellerDesc[1];
                 String sellerEmail = sellerDesc[0]; //solid until here
-                for (Seller seller : sellersList) {
+                for (User seller : sellersList) {
                     if (seller.getName().equals(sellerName) && seller.getEmail().equals(sellerEmail)) {
-                        currentSeller = seller;
+                        currentSeller = (Seller) seller;
                         break;
                     }
                 }
@@ -957,9 +957,9 @@ public class Market {
                             break;
                         } else {
                             String[] customerDetails = lineNext.split(",");
-                            for (Customer customerpotential : customersList) {
+                            for (User customerpotential : customersList) {
                                 if (customerpotential.getName().equals(customerDetails[0]) && customerpotential.getEmail().equals(customerDetails[1])) {
-                                    customerList.add(customerpotential);
+                                    customerList.add((Customer) customerpotential);
                                     break;
                                 }
                             }
@@ -1000,7 +1000,7 @@ public class Market {
         }
 
         for (int i = 0; i < customersList.size(); i++) {
-            Customer currentCustomer = customersList.get(i);
+            Customer currentCustomer = (Customer) customersList.get(i);
             if (customerTempCart.get(i) != null) {
                 String[] customerCartContents = customerTempCart.get(i).split("\n");
                 for (String customerCartContent : customerCartContents) {
@@ -1035,7 +1035,8 @@ public class Market {
             FileWriter fileWriter = new FileWriter(users, false);
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
-            for (Customer customer : customersList) {
+            for (User customerUser : customersList) {
+                Customer customer = (Customer) customerUser;
                 printWriter.println("Customer," + customer.getEmail() + "," +  customer.getName() + "," + customer.getPassword());
                 if (!customer.getPastPurchase().isEmpty()) {
                     printWriter.println("PAST PURCHASE");
@@ -1059,7 +1060,7 @@ public class Market {
                     }
                 }
             }
-            for (Seller seller : sellersList) {
+            for (User seller : sellersList) {
                 printWriter.println("Seller," + seller.getEmail() + "," + seller.getName() + "," + seller.getPassword());
                 printWriter.println("--------");
             }
