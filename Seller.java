@@ -1,6 +1,7 @@
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Seller extends User{
     private ArrayList<Store> storeList;
@@ -9,10 +10,10 @@ public class Seller extends User{
         storeList = new ArrayList<>();
     }
     /* Functions electable
-    *
-    * Dashboard for displaying stores
-    *
-    * */
+     *
+     * Dashboard for displaying stores
+     *
+     * */
     public void newStore(String storeName) {
         storeList.add(new Store(storeName, getName(), getEmail())); //edit; seller name and email added to field of the store so we may backtrack?
     }
@@ -71,7 +72,9 @@ public class Seller extends User{
             choice = checkChoice(scan, 5);
             if (choice == 1) {
                 int count = 0;
-                System.out.println("Which booth would you like to view?");
+                if (!storeList.isEmpty()) {
+                    System.out.println("Which booth would you like to view?");
+                }
                 for (Store store : storeList) {
                     count++;
                     System.out.println(count + ". " + store.name);
@@ -85,27 +88,43 @@ public class Seller extends User{
             } else if (choice == 2){
                 System.out.println("Enter the name of the booth: ");
                 String storeName = scan.nextLine();
-                storeList.add(new Store(storeName, getName(), getEmail()));
+                Store e = new Store(storeName, getName(), getEmail());
+                storeList.add(e);
             } else if (choice == 3){
                 int count = 0;
-                System.out.println("Which booth would you like to edit?");
+                if (!storeList.isEmpty()) {
+                    System.out.println("Which booth would you like to edit?");
+                }
                 for (Store store : storeList){
                     count++;
                     System.out.println(count + ". " + store.getName());
                 }
-                choice = checkChoice(scan, storeList.size());
-                getStore().get(choice - 1).editStore(scan);
-                System.out.println("Booth successfully edited!");
+                if (count == 0) {
+                    System.out.println("No booths available to edit!");
+                } else {
+                    choice = checkChoice(scan, storeList.size());
+                    getStore().get(choice - 1).editStore(scan);
+                    System.out.println("Booth successfully edited!");
+                }
             } else if (choice == 4){
                 int count = 0;
-                System.out.println("Which booth would you like to remove?");
-                for (Store store : storeList){
-                    count++;
-                    System.out.println(count + ". " + store.getName());
+                if (!storeList.isEmpty()) {
+                    System.out.println("Which booth would you like to remove?");
+                    for (Store store : storeList) {
+                        count++;
+                        System.out.println(count + ". " + store.getName());
+                    }
+                    if (count == 0) {
+                        System.out.println("No booths available to delete!");
+                    } else {
+                        choice = checkChoice(scan, storeList.size());
+                        getStore().remove(getStore().get(choice - 1));
+                        System.out.println("Booth successfully removed!");
+                    }
+                } else {
+                    System.out.println("No booths available to delete!");
                 }
-                choice = checkChoice(scan, storeList.size());
-                getStore().remove(getStore().get(choice - 1));
-                System.out.println("Booth successfully removed!");
+
             }
             else if (choice == 5){
                 break;
