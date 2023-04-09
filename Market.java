@@ -1,6 +1,7 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.io.*;
 public class Market {
     public static final String WELCOME = "Welcome to the CS 180 Farmer's Market!";
     public static final String LOGIN = "Are you an existing user?";
