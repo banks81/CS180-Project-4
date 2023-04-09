@@ -96,7 +96,12 @@ public class Market {
         }
         return emailExists;
     }
-
+    public static ArrayList<User> customersList = new ArrayList<>();
+    public static ArrayList<User> sellersList = new ArrayList<>();
+    public static ArrayList<Store> storesList = new ArrayList<>(); //arrayList of stores in the marketplace
+    public static ArrayList<Products> productsList = new ArrayList<>();
+    public static ArrayList<String> customerTempCart = new ArrayList<>();
+    
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         int choice = -1; //scanner choice
@@ -106,13 +111,7 @@ public class Market {
         boolean seller; //if true, user is a seller, if false, user is a customer
         boolean stayInMarketMenu = true;
         boolean stayInProductMenu = true; //boolean for the smaller end-menus after market menu
-
-
-        ArrayList<User> customersList = new ArrayList<>();
-        ArrayList<User> sellersList = new ArrayList<>();
-        ArrayList<Store> storesList = new ArrayList<>(); //arrayList of stores in the marketplace
-        ArrayList<Products> productsList = new ArrayList<>();
-
+    
         User currentUser = null; //the current user of the program
 
         //TODO here call the method that parses through the files and gets all the info
@@ -843,5 +842,260 @@ public class Market {
             }
         } while (stayInMenu);
     }
+    public static void readFile() {
+        File users = new File("UsersList.txt");
+        try {
+            FileReader fileReader = new FileReader(users);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            boolean customerOverFlowed = true;
+            String infoType = null;
+            String lineNext = "";
+            while (true) {
+                if (customerOverFlowed) {   //if true; current cursor at --------
+                    lineNext = bufferedReader.readLine();
+                    customerOverFlowed = false;
+                } else {    //if false; current cursor at customer information
+                    lineNext = infoType;
+                }
+                if (lineNext == null) {
+                    break;
+                }
+                String[] firstLine = lineNext.split(",");
+                if (firstLine[0].equals("Customer")) {
+                    Customer customerCurrent = new Customer(firstLine[1], firstLine[2], firstLine[3]);
+                    infoType = bufferedReader.readLine();
+                    if (infoType.equals("PAST PURCHASE")) {
+                        while (true) {
+                            String productsList = bufferedReader.readLine();
+                            if (productsList.equals("--------")) {
+                                break;
+                            }
+                            String[] pastPurchase = productsList.split(",");
+                            customerCurrent.addProducts(pastPurchase[0], Integer.parseInt(pastPurchase[1]));
+                        }
+                        infoType = bufferedReader.readLine();
+                        if (infoType == null) {
+                            break;
+                        }
+                    }
+                    if (infoType.equals("SHOPPING CART")) {
+                        StringBuilder customerCartBuild = new StringBuilder();
+                        while (true) {
+                            String shoppingList = bufferedReader.readLine();
+                            if (shoppingList.equals("--------")) {
+                                customerOverFlowed = true;
+                                break;
+                            }
+                            customerCartBuild.append(shoppingList);
+                            customerCartBuild.append("\n");
+                        }
+                        customerTempCart.add(customerCartBuild.toString());
+                    } else {
+                        if (infoType.equals("--------")) {
+                            customerOverFlowed = true;
+                        } else {
+                            customerOverFlowed = false;
+                        }
+                        customerTempCart.add(null);
+                    }
+                    customersList.add(customerCurrent);
+                } else {
+                    Seller sellerCurrent = new Seller(firstLine[1], firstLine[2], firstLine[3]);
+                    sellersList.add(sellerCurrent);
+                    infoType = bufferedReader.readLine();
+                    customerOverFlowed = true;
+                }
+            }
+            bufferedReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File does not exist!");
+        } catch (IOException e) {
+            System.out.println("Invalid file format!");
+        }
+        File storeList = new File("StoreList.txt");
+        try {
+            FileReader fileReader = new FileReader(storeList);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            boolean isAtDashline = true;
+            String lineNext = "";
+            //each store
+            while (true) {
+                if (isAtDashline) {
+                    lineNext = bufferedReader.readLine();    //cursor must be at -------- before this statement
+                }
+                isAtDashline = true;
+                if (lineNext == null || lineNext.equals("\n")) {
+                    break;
+                }
+                Seller currentSeller = null;
+                Store currentStore = null;
 
+                String storeName = lineNext;
+                String[] sellerDesc = bufferedReader.readLine().split(",");
+                String sellerName = sellerDesc[1];
+                String sellerEmail = sellerDesc[0]; //solid until here
+                for (Seller seller : sellersList) {
+                    if (seller.getName().equals(sellerName) && seller.getEmail().equals(sellerEmail)) {
+                        currentSeller = seller;
+                        break;
+                    }
+                }
+                currentStore = new Store(storeName, sellerName, sellerEmail);
+                currentStore.setRevenue(Double.parseDouble(bufferedReader.readLine()));
+                currentStore.setSales(Integer.parseInt(bufferedReader.readLine()));
+
+                lineNext = bufferedReader.readLine();
+                if (lineNext.equals("CUSTOMERLIST")) {
+                    ArrayList<Customer> customerList = currentStore.getCustomers();
+                    //customerList
+                    while (true) {
+                        lineNext = bufferedReader.readLine();
+                        if (lineNext.equals("--------")) {
+                            break;
+                        } else {
+                            String[] customerDetails = lineNext.split(",");
+                            for (Customer customerpotential : customersList) {
+                                if (customerpotential.getName().equals(customerDetails[0]) && customerpotential.getEmail().equals(customerDetails[1])) {
+                                    customerList.add(customerpotential);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    currentStore.setCustomers(customerList);
+                    lineNext = bufferedReader.readLine();
+                    isAtDashline = false;
+                }
+                if (lineNext == null) {
+                    storesList.add(currentStore);
+                    currentSeller.addStore(currentStore);
+                    break;
+                }
+                if (lineNext.equals("PRODUCTSLIST")) {
+                    //productList
+                    while (true) {
+                        lineNext = bufferedReader.readLine();
+                        if (lineNext.equals("--------")) {
+                            isAtDashline = true;
+                            break;
+                        }
+                        String[] productDetails = lineNext.split(",");
+                        Products currentProduct = new Products(productDetails[0], Double.parseDouble(productDetails[1]), Integer.parseInt(productDetails[2]),
+                                productDetails[3], Integer.parseInt(productDetails[4]), storeName);
+                        currentStore.addGoods(currentProduct);
+                        productsList.add(currentProduct);
+                    }
+                }
+                storesList.add(currentStore);
+                currentSeller.addStore(currentStore);
+            }
+            bufferedReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File does not exist!");
+        } catch (IOException e) {
+            System.out.println("Invalid file format!");
+        }
+
+        for (int i = 0; i < customersList.size(); i++) {
+            Customer currentCustomer = customersList.get(i);
+            if (customerTempCart.get(i) != null) {
+                String[] customerCartContents = customerTempCart.get(i).split("\n");
+                for (String customerCartContent : customerCartContents) {
+                    boolean foundItem = false;
+                    boolean inStock = false;
+                    String[] itemDesc = customerCartContent.split(",");
+                    String itemName = itemDesc[0];
+                    String storeName = itemDesc[1];
+                    for (Products productInQuestion : productsList) {
+                        if (productInQuestion.getName().equals(itemName) && productInQuestion.getStoreName().equals(storeName)) {
+                            inStock = productInQuestion.getQuantity() > 0;
+                            foundItem = true;
+                        }
+                        if (inStock && foundItem) {
+                            currentCustomer.addToShoppingCart(productInQuestion);
+                            break;
+                        } else if (foundItem && !inStock) {
+                            currentCustomer.shoppingCartChangeHelper(itemName, 1);
+                            break;
+                        }
+                    }
+                    if (!foundItem) {
+                        currentCustomer.shoppingCartChangeHelper(itemName, 2);
+                    }
+                }
+            }
+        }
+    }
+    public static void writeFile() {
+        File users = new File("UsersList.txt");
+        try {
+            FileWriter fileWriter = new FileWriter(users, false);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+
+            for (Customer customer : customersList) {
+                printWriter.println("Customer," + customer.getEmail() + "," +  customer.getName() + "," + customer.getPassword());
+                if (!customer.getPastPurchase().isEmpty()) {
+                    printWriter.println("PAST PURCHASE");
+                    for (int i = 0; i < customer.getPastPurchase().size(); i++) {
+                        printWriter.println(customer.getPastPurchase().get(i) + "," + customer.getPurchaseCount().get(i));
+                    }
+                    printWriter.println("--------");
+                }
+                if (!customer.getShoppingCart().isEmpty()) {
+                    printWriter.println("SHOPPING CART");
+                    for (int j = 0; j < customer.getShoppingCart().size(); j++) {
+                        printWriter.println(customer.getShoppingCart().get(j).getName() + "," + customer.getShoppingCart().get(j).getStoreName());
+                    }
+                    printWriter.println("--------");
+                }
+                if (customer.getShoppingCart().isEmpty() && customer.getPastPurchase().isEmpty()) {
+                    printWriter.println("--------");
+                }
+                if (!customer.getShoppingCartChanges().isEmpty()) {
+                    for (String errorMessages : customer.getShoppingCartChanges()) {
+                    }
+                }
+            }
+            for (Seller seller : sellersList) {
+                printWriter.println("Seller," + seller.getEmail() + "," + seller.getName() + "," + seller.getPassword());
+                printWriter.println("--------");
+            }
+            printWriter.close();
+        } catch (Exception e) {
+            int i = 0;
+        }
+
+        File storeFile = new File("StoreList.txt");
+        try {
+            FileWriter fileWriter = new FileWriter(storeFile, false);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+
+            for (Store store : storesList) {
+                printWriter.println(store.getName());
+                printWriter.println(store.getSellerEmail() + "," + store.getSellerName());
+                printWriter.println(store.getRevenue());
+                printWriter.println(store.getSales());
+                if (!store.getCustomers().isEmpty()) {
+                    printWriter.println("CUSTOMERLIST");
+                    for (Customer customer : store.getCustomers()) {
+                        printWriter.println(customer.getName() + "," + customer.getEmail());
+                    }
+                    printWriter.println("--------");
+                }
+                if (!store.getGoods().isEmpty()) {
+                    printWriter.println("PRODUCTSLIST");
+                    for (Products product : store.getGoods()) {
+                        printWriter.printf("%s,%.2f,%d,%s,%d\n",product.getName(),product.getPrice(),product.getQuantity(),product.getDescription(),product.getSales());
+                    }
+                    printWriter.println("--------");
+                }
+                if (store.getCustomers().isEmpty() && store.getGoods().isEmpty()) {
+                    printWriter.println("--------");
+                }
+            }
+            printWriter.close();
+        } catch (Exception e) {
+            System.out.println("Program terminated.");
+        }
+    }    
 }
