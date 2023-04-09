@@ -119,6 +119,7 @@ public class Market {
         // 1. arrayList of products
         //
         //for buyers and sellers and etc
+        readFile();
 
         System.out.println(WELCOME);
         do {
@@ -841,6 +842,7 @@ public class Market {
                 return;
             }
         } while (stayInMenu);
+        writeFile();
     }
     public static void readFile() {
         File users = new File("UsersList.txt");
