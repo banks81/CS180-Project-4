@@ -37,9 +37,12 @@ The Seller class extends the User class, which contains the basic information of
 
 The Seller class was tested by ________________
 
+
 ### Customer
 
+The Customer class extends the User class, and it contains all of the information that must be associated with an instance of a User that is a Customer, that is not already stored within the User class. This includes a String ArrayList of the names of products past purchased, an Integer ArrayList of the number of products past purchased, and another Integer ArrayList of the number of items in the cart for each Product in the cart. This class contains all necessary getters and setters for this information, along with the methods called from the Market class to manipulate the information when a purchase or cart addition is made. The Customer class handles the Shopping Cart selection from Option three of the handout. The card can be added to, removed from, or purchased all at once. The shopping cart is also updated between sign ins, for example if the Seller signs in and increases the quantity, the shopping cart will reflect that. This is enabled by the method shoppingCartChangeHelper(). 
 
+The Customer Class was tested by _________
 
 
 ### Products
