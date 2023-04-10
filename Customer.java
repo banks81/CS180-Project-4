@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Customer extends User {
     private ArrayList<String> pastPurchase; //edit made, if the code is made under the assumption this is a Products class please let me know
     private ArrayList<Integer> purchaseCount;
+    private ArrayList<Integer> cartQuantityList;
 
     public void setShoppingCart(ArrayList<Products> shoppingCart) {
         this.shoppingCart = shoppingCart;
@@ -25,6 +26,7 @@ public class Customer extends User {
         purchaseCount = new ArrayList<>();
         shoppingCart = new ArrayList<>();
         shoppingCartChanges = new ArrayList<>();
+        cartQuantityList = new ArrayList<>();
 
     }
     public ArrayList<Products> getShoppingCart() {
