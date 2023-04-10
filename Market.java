@@ -935,9 +935,10 @@ public class Market {
                 String[] sellerDesc = bufferedReader.readLine().split(",");
                 String sellerName = sellerDesc[1];
                 String sellerEmail = sellerDesc[0]; //solid until here
-                for (User seller : sellersList) {
+                for (User sellerDefault : sellersList) {
+                    Seller seller = (Seller) sellerDefault;
                     if (seller.getName().equals(sellerName) && seller.getEmail().equals(sellerEmail)) {
-                        currentSeller = (Seller) seller;
+                        currentSeller = seller;
                         break;
                     }
                 }
@@ -955,9 +956,10 @@ public class Market {
                             break;
                         } else {
                             String[] customerDetails = lineNext.split(",");
-                            for (User customerpotential : customersList) {
+                            for (User customerpotentialDefault : customersList) {
+                                Customer customerpotential = (Customer) customerpotentialDefault;
                                 if (customerpotential.getName().equals(customerDetails[0]) && customerpotential.getEmail().equals(customerDetails[1])) {
-                                    customerList.add((Customer) customerpotential);
+                                    customerList.add(customerpotential);
                                     break;
                                 }
                             }
@@ -980,9 +982,9 @@ public class Market {
                             isAtDashline = true;
                             break;
                         }
-                        String[] productDetails = lineNext.split(";;"); //Now splits if there is ;;
+                        String[] productDetails = lineNext.split(",");
                         Products currentProduct = new Products(productDetails[0], Double.parseDouble(productDetails[1]), Integer.parseInt(productDetails[2]),
-                                productDetails[3], Integer.parseInt(productDetails[4]), storeName);
+                                productDetails[3], Integer.parseInt(productDetails[4]), storeName, Integer.parseInt(productDetails[5]));
                         currentStore.addGoods(currentProduct);
                         productsList.add(currentProduct);
                     }
@@ -1007,13 +1009,14 @@ public class Market {
                     String[] itemDesc = customerCartContent.split(",");
                     String itemName = itemDesc[0];
                     String storeName = itemDesc[1];
+                    int quantity = Integer.parseInt(itemDesc[2]);
                     for (Products productInQuestion : productsList) {
                         if (productInQuestion.getName().equals(itemName) && productInQuestion.getStoreName().equals(storeName)) {
                             inStock = productInQuestion.getQuantity() > 0;
                             foundItem = true;
                         }
                         if (inStock && foundItem) {
-                            currentCustomer.addToShoppingCart(productInQuestion);
+                            currentCustomer.initializeToShoppingCart(productInQuestion, quantity);
                             break;
                         } else if (foundItem && !inStock) {
                             currentCustomer.shoppingCartChangeHelper(itemName, 1);
@@ -1033,8 +1036,8 @@ public class Market {
             FileWriter fileWriter = new FileWriter(users, false);
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
-            for (User customerUser : customersList) {
-                Customer customer = (Customer) customerUser;
+            for (User customerDefault : customersList) {
+                Customer customer = (Customer) customerDefault;
                 printWriter.println("Customer," + customer.getEmail() + "," +  customer.getName() + "," + customer.getPassword());
                 if (!customer.getPastPurchase().isEmpty()) {
                     printWriter.println("PAST PURCHASE");
@@ -1046,7 +1049,9 @@ public class Market {
                 if (!customer.getShoppingCart().isEmpty()) {
                     printWriter.println("SHOPPING CART");
                     for (int j = 0; j < customer.getShoppingCart().size(); j++) {
-                        printWriter.println(customer.getShoppingCart().get(j).getName() + "," + customer.getShoppingCart().get(j).getStoreName());
+                        printWriter.println(customer.getShoppingCart().get(j).getName() + "," +
+                                customer.getShoppingCart().get(j).getStoreName() + "," +
+                                customer.getCartQuantityList().get(j));
                     }
                     printWriter.println("--------");
                 }
@@ -1058,13 +1063,14 @@ public class Market {
                     }
                 }
             }
-            for (User seller : sellersList) {
+            for (User sellerDefault : sellersList) {
+                Seller seller = (Seller) sellerDefault;
                 printWriter.println("Seller," + seller.getEmail() + "," + seller.getName() + "," + seller.getPassword());
                 printWriter.println("--------");
             }
             printWriter.close();
         } catch (Exception e) {
-            int i = 0;
+            e.printStackTrace();
         }
 
         File storeFile = new File("StoreList.txt");
@@ -1072,43 +1078,37 @@ public class Market {
             FileWriter fileWriter = new FileWriter(storeFile, false);
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
-            for (Store store : storesList) {
-                printWriter.println(store.getName());
-                printWriter.println(store.getSellerEmail() + "," + store.getSellerName());
-                printWriter.println(store.getRevenue());
-                printWriter.println(store.getSales());
-                if (!store.getCustomers().isEmpty()) {
-                    printWriter.println("CUSTOMERLIST");
-                    for (Customer customer : store.getCustomers()) {
-                        printWriter.println(customer.getName() + "," + customer.getEmail());
+            for (User sellerDefault : sellersList) {
+                Seller seller = (Seller) sellerDefault;
+                for (Store store : seller.getStore()) {
+                    printWriter.println(store.getName());
+                    printWriter.println(store.getSellerEmail() + "," + store.getSellerName());
+                    printWriter.println(store.getRevenue());
+                    printWriter.println(store.getSales());
+                    if (!store.getCustomers().isEmpty()) {
+                        printWriter.println("CUSTOMERLIST");
+                        for (Customer customer : store.getCustomers()) {
+                            printWriter.println(customer.getName() + "," + customer.getEmail());
+                        }
+                        printWriter.println("--------");
                     }
-                    printWriter.println("--------");
-                }
-                if (!store.getGoods().isEmpty()) {
-                    printWriter.println("PRODUCTSLIST");
-                    for (Products product : store.getGoods()) {
-                        printWriter.printf("%s;;%.2f;;%d;;%s;;%d\n",product.getName(),product.getPrice(),product.getQuantity(),product.getDescription(),product.getSales());
+                    if (!store.getGoods().isEmpty()) {
+                        printWriter.println("PRODUCTSLIST");
+                        for (Products product : store.getGoods()) {
+                            printWriter.printf("%s,%.2f,%d,%s,%d,%d\n", product.getName(), product.getPrice(),
+                                    product.getQuantity(), product.getDescription(), product.getSales(),
+                                    product.getInShoppingCart());
+                        }
+                        printWriter.println("--------");
                     }
-                    printWriter.println("--------");
-                }
-                if (store.getCustomers().isEmpty() && store.getGoods().isEmpty()) {
-                    printWriter.println("--------");
+                    if (store.getCustomers().isEmpty() && store.getGoods().isEmpty()) {
+                        printWriter.println("--------");
+                    }
                 }
             }
             printWriter.close();
         } catch (Exception e) {
             System.out.println("Program terminated.");
-        }
-    }
-    
-    public static void updateSeller(Seller sellerNew) {
-        for (int i = 0; i < sellersList.size(); i++) {
-            Seller sellerOld = (Seller) sellersList.get(i);
-            if (sellerOld.getName().equals(sellerNew.getName()) && sellerOld.getEmail().equals(sellerNew.getEmail())
-                    && sellerOld.getPassword().equals(sellerNew.getPassword())) {
-                sellersList.set(i,sellerNew);
-                break;
-            }
         }
     }
     
