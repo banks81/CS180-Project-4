@@ -1112,7 +1112,18 @@ public class Market {
         }
     }
     
-    public static void updateCustomerPurchase(Products productBought) {
+    public static void updateSeller(Seller sellerNew) {
+        for (int i = 0; i < sellersList.size(); i++) {
+            Seller sellerOld = (Seller) sellersList.get(i);
+            if (sellerOld.getName().equals(sellerNew.getName()) && sellerOld.getEmail().equals(sellerNew.getEmail())
+                    && sellerOld.getPassword().equals(sellerNew.getPassword())) {
+                sellersList.set(i,sellerNew);
+                break;
+            }
+        }
+    }
+
+    public static void findAndUpdateProduct(Products productBought) {
         boolean isFound = false;
         for (Products productRegistered : productsList) {
             if (productRegistered.getName().equals(productBought.getName())
@@ -1130,24 +1141,32 @@ public class Market {
                         for (User sellerRegistered : sellersList) {
                             if (storeRegistered.getSellerName().equals(sellerRegistered.getName())
                                     && storeRegistered.getSellerEmail().equals(sellerRegistered.getEmail())) {
-                                Seller seller = (Seller) sellerRegistered;
-                                ArrayList<Store> stores = seller.getStore();
-
-                                stores.set(stores.indexOf(storeRegistered), storeTemp);
-                                seller.setStore(stores);
-                                sellersList.set(sellersList.indexOf(sellerRegistered), seller);
+                                Seller newSeller = (Seller) sellerRegistered;
+                                ArrayList<Store> stores = newSeller.getStore();
+                                if (stores.contains(storeRegistered)) {
+                                    stores.set(stores.indexOf(storeRegistered), storeTemp);
+                                } else {
+                                    for (Store storeInSeller : stores) {
+                                        if (storeInSeller.getName().equals(storeTemp.getName())) {
+                                            stores.set(stores.indexOf(storeInSeller), storeTemp);
+                                            break;
+                                        }
+                                    }
+                                }
+                                newSeller.setStore(stores);
+                                sellersList.set(sellersList.indexOf(sellerRegistered), newSeller);
                                 isFound = true;
                                 break;
                             }
                         }
-                        if (isFound) {
-                            break;
-                        }
+                    }
+                    if (isFound) {
+                        break;
                     }
                 }
+            }
             if (isFound) {
                 break;
-            }
             }
         }
     }
