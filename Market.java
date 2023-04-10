@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.io.*;
+
 public class Market {
     public static final String WELCOME = "Welcome to the CS 180 Farmer's Market!";
     public static final String LOGIN = "Are you an existing user?";
@@ -24,7 +25,6 @@ public class Market {
     public static final String SUREDELETE = "Are you sure you want to delete your account?";
     public static final String DELETING = "Deleting your account...";
     public static final String SUREQUIT = "Are you sure you want to quit?";
-
 
 
     //seller
@@ -58,7 +58,6 @@ public class Market {
     public static final String ADDEDTOSHOP = "Added to shopping cart!";
     public static final String REMOVEDSHOP = "Removed from shopping cart!";
     public static final String PURCHASED = "Purchased!";
-
 
 
     //shopping cart menu
@@ -465,7 +464,8 @@ public class Market {
                                                 System.out.println("Returning to product listings...");
                                                 stayInProductMenu = true;
                                                 break;
-                                            } case 2 -> {
+                                            }
+                                            case 2 -> {
                                                 int purchaseQuantity = 5000;
 
                                                 do {
@@ -498,7 +498,8 @@ public class Market {
 
 
                                                 break;
-                                            } case 3 -> {
+                                            }
+                                            case 3 -> {
                                                 stayInProductMenu = true;
                                                 break;
                                             }
@@ -539,7 +540,8 @@ public class Market {
                                 } while (stayInProductMenu);
 
 
-                            } case 2 -> {                   //SEARCH FOR PRODUCTS
+                            }
+                            case 2 -> {                   //SEARCH FOR PRODUCTS
                                 int stayInSearchMenu = -1;
                                 ArrayList<Products> foundProducts = new ArrayList<>();
                                 int foundProductCounter = 0;
@@ -666,8 +668,8 @@ public class Market {
                                 } while (stayInSearchMenu == 1);
 
 
-
-                            } case 3 -> { //sort the products by price, lowest to highest
+                            }
+                            case 3 -> { //sort the products by price, lowest to highest
                                 ArrayList<Products> tempArr = new ArrayList<>();
                                 double min;
                                 int minInd;
@@ -690,7 +692,8 @@ public class Market {
                                 productsList = new ArrayList<>(tempArr); //Set the original array equal to the sorted temp array
                                 System.out.println("Products have been sorted from lowest to highest price!");
 
-                            } case 4 -> { //sort the products by quantity available, lowest to highest
+                            }
+                            case 4 -> { //sort the products by quantity available, lowest to highest
                                 ArrayList<Products> tempArr = new ArrayList<>();
                                 double min;
                                 int minInd;
@@ -712,7 +715,8 @@ public class Market {
                                 productsList = new ArrayList<>(tempArr); //Set the original array equal to the sorted temp array
                                 System.out.println("Products have been sorted from lowest to highest quantity available!");
 
-                            } case 5 -> { //view your purchase history
+                            }
+                            case 5 -> { //view your purchase history
                                 ArrayList<String> tempStringArr = ((Customer) currentUser).getPastPurchase();
 
                                 if (tempStringArr.isEmpty())
@@ -724,7 +728,8 @@ public class Market {
                                     }
                                 }
 
-                            } case 6 -> { //view your shopping cart
+                            }
+                            case 6 -> { //view your shopping cart
                                 //Retrieve the private shopping cart list through a temp list
                                 if (!((Customer) currentUser).getShoppingCartChanges().isEmpty()) {
                                     for (int i = 0; i < ((Customer) currentUser).getShoppingCartChanges().size(); i++) {
@@ -737,9 +742,7 @@ public class Market {
                                 if (tempProductsArr.isEmpty()) {
                                     System.out.println("You have nothing in your shopping cart.");
                                     stayInMarketMenu = true;
-                                }
-
-                                else {
+                                } else {
                                     System.out.println("Shopping cart:");
                                     for (int i = 0; i < tempProductsArr.size(); i++) {
                                         System.out.println((i + 1) + ". " + tempProductsArr.get(i).getName() +
@@ -812,9 +815,11 @@ public class Market {
                                         stayInMarketMenu = true;
                                     }
                                 }
-                            } case 7 -> { //go back to main menu
+                            }
+                            case 7 -> { //go back to main menu
                                 stayInMarketMenu = false;
-                            } case 8 -> { //quit
+                            }
+                            case 8 -> { //quit
                                 stayInMarketMenu = false;
                                 stayInMenu = false;
                                 System.out.println(BYE);
@@ -825,7 +830,6 @@ public class Market {
 
 
                     } while (stayInMarketMenu);
-
 
 
                 } else if (currentUser instanceof Seller) {
@@ -843,7 +847,7 @@ public class Market {
         } while (stayInMenu);
         writeFile();
     }
-    
+
     public static void readFile() {
         File users = new File("UsersList.txt");
         try {
@@ -1029,7 +1033,7 @@ public class Market {
             }
         }
     }
-    
+
     public static void writeFile() {
         File users = new File("UsersList.txt");
         try {
@@ -1038,7 +1042,7 @@ public class Market {
 
             for (User customerUser : customersList) {
                 Customer customer = (Customer) customerUser;
-                printWriter.println("Customer," + customer.getEmail() + "," +  customer.getName() + "," + customer.getPassword());
+                printWriter.println("Customer," + customer.getEmail() + "," + customer.getName() + "," + customer.getPassword());
                 if (!customer.getPastPurchase().isEmpty()) {
                     printWriter.println("PAST PURCHASE");
                     for (int i = 0; i < customer.getPastPurchase().size(); i++) {
@@ -1092,8 +1096,8 @@ public class Market {
                 if (!store.getGoods().isEmpty()) {
                     printWriter.println("PRODUCTSLIST");
                     for (Products product : store.getGoods()) {
-                        printWriter.printf("%s;;%.2f;;%d;;%s;;%d;;%d\n",product.getName(),product.getPrice(),
-                                product.getQuantity(),product.getDescription(),product.getSales(),
+                        printWriter.printf("%s;;%.2f;;%d;;%s;;%d;;%d\n", product.getName(), product.getPrice(),
+                                product.getQuantity(), product.getDescription(), product.getSales(),
                                 product.getInShoppingCart());
                     }
                     printWriter.println("--------");
