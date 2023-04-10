@@ -11,6 +11,7 @@ import org.junit.runners.MethodSorters;
 import java.io.*;
 
 import static org.junit.Assert.*;
+
 public class TestOne {
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -22,6 +23,7 @@ public class TestOne {
             }
         }
     }
+
     @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
     public static class TestCase {
