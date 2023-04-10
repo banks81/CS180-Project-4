@@ -5,14 +5,16 @@ public class Products {
     private String description;
     private int sales;
     private String storeName; //edit; store name added as a parameter to allow backtracking if necessary
-
-    public Products(String name, double price, int quantity, String description, int sales, String storeName) {
+    private int inShoppingCart;
+    
+    public Products(String name, double price, int quantity, String description, int sales, String storeName, int inShoppingCart) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
         this.storeName = storeName;
         this.sales = sales; //allow sales to be inputted directly
+        this.inShoppingCart = inShoppingCart;
     }
 
     public String getName() {
@@ -60,6 +62,14 @@ public class Products {
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+    
+    public int getInShoppingCart() {
+        return inShoppingCart;
+    }
+
+    public void setInShoppingCart(int inShoppingCart) {
+        this.inShoppingCart = inShoppingCart;
     }
     
     public String toString() {
