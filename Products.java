@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 public class Products {
     private String name;
     private double price;
@@ -7,7 +8,7 @@ public class Products {
     private int sales;
     private String storeName; //edit; store name added as a parameter to allow backtracking if necessary
     private int inShoppingCart;
-    
+
     public Products(String name, double price, int quantity, String description, int sales, String storeName, int inShoppingCart) {
         this.name = name;
         this.price = price;
@@ -57,6 +58,7 @@ public class Products {
     public void setSales(int sales) {
         this.sales = sales;
     }
+
     public String getStoreName() {
         return storeName;
     }
@@ -64,7 +66,7 @@ public class Products {
     public void setStoreName(String storeName) {
         this.storeName = storeName;
     }
-    
+
     public int getInShoppingCart() {
         return inShoppingCart;
     }
@@ -72,12 +74,13 @@ public class Products {
     public void setInShoppingCart(int inShoppingCart) {
         this.inShoppingCart = inShoppingCart;
     }
-    
+
     public String toString() {
         return String.format("Product Name: " + getName() + ", Store name: " + getStoreName() + "" +
-                           "\n              Product Description: " + getDescription()
+                "\n              Product Description: " + getDescription()
                 + "\n              Quantity Available: " + getQuantity() + ", Price: " + getPrice());
     }
+
     public int checkChoice(Scanner scan, int lastNum) {
         int choice;
         do {
@@ -115,6 +118,7 @@ public class Products {
             }
         } while (true);
     }
+
     public void editProduct(Scanner scan) {
         int choice;
         System.out.println("Edit name?\n1. Yes\n2. No");
@@ -147,5 +151,5 @@ public class Products {
         }
     }
 
-    
+
 }
