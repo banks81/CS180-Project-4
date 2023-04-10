@@ -843,6 +843,7 @@ public class Market {
         } while (stayInMenu);
         writeFile();
     }
+    
     public static void readFile() {
         File users = new File("UsersList.txt");
         try {
@@ -935,10 +936,9 @@ public class Market {
                 String[] sellerDesc = bufferedReader.readLine().split(",");
                 String sellerName = sellerDesc[1];
                 String sellerEmail = sellerDesc[0]; //solid until here
-                for (User sellerDefault : sellersList) {
-                    Seller seller = (Seller) sellerDefault;
+                for (User seller : sellersList) {
                     if (seller.getName().equals(sellerName) && seller.getEmail().equals(sellerEmail)) {
-                        currentSeller = seller;
+                        currentSeller = (Seller) seller;
                         break;
                     }
                 }
@@ -956,10 +956,9 @@ public class Market {
                             break;
                         } else {
                             String[] customerDetails = lineNext.split(",");
-                            for (User customerpotentialDefault : customersList) {
-                                Customer customerpotential = (Customer) customerpotentialDefault;
+                            for (User customerpotential : customersList) {
                                 if (customerpotential.getName().equals(customerDetails[0]) && customerpotential.getEmail().equals(customerDetails[1])) {
-                                    customerList.add(customerpotential);
+                                    customerList.add((Customer) customerpotential);
                                     break;
                                 }
                             }
@@ -982,9 +981,9 @@ public class Market {
                             isAtDashline = true;
                             break;
                         }
-                        String[] productDetails = lineNext.split(",");
+                        String[] productDetails = lineNext.split(";;"); //Now splits if there is ;;
                         Products currentProduct = new Products(productDetails[0], Double.parseDouble(productDetails[1]), Integer.parseInt(productDetails[2]),
-                                productDetails[3], Integer.parseInt(productDetails[4]), storeName, Integer.parseInt(productDetails[5]));
+                                productDetails[3], Integer.parseInt(productDetails[4]), storeName,0);
                         currentStore.addGoods(currentProduct);
                         productsList.add(currentProduct);
                     }
@@ -1016,7 +1015,7 @@ public class Market {
                             foundItem = true;
                         }
                         if (inStock && foundItem) {
-                            currentCustomer.initializeToShoppingCart(productInQuestion, quantity);
+                            currentCustomer.addToShoppingCart(productInQuestion, quantity);
                             break;
                         } else if (foundItem && !inStock) {
                             currentCustomer.shoppingCartChangeHelper(itemName, 1);
@@ -1030,14 +1029,15 @@ public class Market {
             }
         }
     }
+    
     public static void writeFile() {
         File users = new File("UsersList.txt");
         try {
             FileWriter fileWriter = new FileWriter(users, false);
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
-            for (User customerDefault : customersList) {
-                Customer customer = (Customer) customerDefault;
+            for (User customerUser : customersList) {
+                Customer customer = (Customer) customerUser;
                 printWriter.println("Customer," + customer.getEmail() + "," +  customer.getName() + "," + customer.getPassword());
                 if (!customer.getPastPurchase().isEmpty()) {
                     printWriter.println("PAST PURCHASE");
@@ -1063,14 +1063,13 @@ public class Market {
                     }
                 }
             }
-            for (User sellerDefault : sellersList) {
-                Seller seller = (Seller) sellerDefault;
+            for (User seller : sellersList) {
                 printWriter.println("Seller," + seller.getEmail() + "," + seller.getName() + "," + seller.getPassword());
                 printWriter.println("--------");
             }
             printWriter.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            int i = 0;
         }
 
         File storeFile = new File("StoreList.txt");
@@ -1078,32 +1077,29 @@ public class Market {
             FileWriter fileWriter = new FileWriter(storeFile, false);
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
-            for (User sellerDefault : sellersList) {
-                Seller seller = (Seller) sellerDefault;
-                for (Store store : seller.getStore()) {
-                    printWriter.println(store.getName());
-                    printWriter.println(store.getSellerEmail() + "," + store.getSellerName());
-                    printWriter.println(store.getRevenue());
-                    printWriter.println(store.getSales());
-                    if (!store.getCustomers().isEmpty()) {
-                        printWriter.println("CUSTOMERLIST");
-                        for (Customer customer : store.getCustomers()) {
-                            printWriter.println(customer.getName() + "," + customer.getEmail());
-                        }
-                        printWriter.println("--------");
+            for (Store store : storesList) {
+                printWriter.println(store.getName());
+                printWriter.println(store.getSellerEmail() + "," + store.getSellerName());
+                printWriter.println(store.getRevenue());
+                printWriter.println(store.getSales());
+                if (!store.getCustomers().isEmpty()) {
+                    printWriter.println("CUSTOMERLIST");
+                    for (Customer customer : store.getCustomers()) {
+                        printWriter.println(customer.getName() + "," + customer.getEmail());
                     }
-                    if (!store.getGoods().isEmpty()) {
-                        printWriter.println("PRODUCTSLIST");
-                        for (Products product : store.getGoods()) {
-                            printWriter.printf("%s,%.2f,%d,%s,%d,%d\n", product.getName(), product.getPrice(),
-                                    product.getQuantity(), product.getDescription(), product.getSales(),
-                                    product.getInShoppingCart());
-                        }
-                        printWriter.println("--------");
+                    printWriter.println("--------");
+                }
+                if (!store.getGoods().isEmpty()) {
+                    printWriter.println("PRODUCTSLIST");
+                    for (Products product : store.getGoods()) {
+                        printWriter.printf("%s;;%.2f;;%d;;%s;;%d;;%d\n",product.getName(),product.getPrice(),
+                                product.getQuantity(),product.getDescription(),product.getSales(),
+                                product.getInShoppingCart());
                     }
-                    if (store.getCustomers().isEmpty() && store.getGoods().isEmpty()) {
-                        printWriter.println("--------");
-                    }
+                    printWriter.println("--------");
+                }
+                if (store.getCustomers().isEmpty() && store.getGoods().isEmpty()) {
+                    printWriter.println("--------");
                 }
             }
             printWriter.close();
@@ -1112,61 +1108,44 @@ public class Market {
         }
     }
     
-    public static void updateSeller(Seller sellerNew) {
-        for (int i = 0; i < sellersList.size(); i++) {
-            Seller sellerOld = (Seller) sellersList.get(i);
-            if (sellerOld.getName().equals(sellerNew.getName()) && sellerOld.getEmail().equals(sellerNew.getEmail())
-                    && sellerOld.getPassword().equals(sellerNew.getPassword())) {
-                sellersList.set(i,sellerNew);
-                break;
-            }
-        }
-    }
-
-    public static void findAndUpdateProduct(Products productBought) {
-        boolean isFound = false;
-        for (Products productRegistered : productsList) {
-            if (productRegistered.getName().equals(productBought.getName())
-                    && productRegistered.getStoreName().equals(productBought.getStoreName())
-                    && productRegistered.getDescription().equals(productBought.getDescription())) {
-                productsList.set(productsList.indexOf(productRegistered), productBought);
-                for (Store storeRegistered : storesList) {
-                    if (storeRegistered.getName().equals(productBought.getStoreName())) {
-                        Store storeTemp = storeRegistered;
-                        ArrayList<Products> newGoods = storeRegistered.getGoods();
-
-                        newGoods.set(newGoods.indexOf(productRegistered), productBought);
-                        storeTemp.setGoods(newGoods);
-                        storesList.set(storesList.indexOf(storeRegistered), storeTemp);
-                        for (User sellerRegistered : sellersList) {
-                            if (storeRegistered.getSellerName().equals(sellerRegistered.getName())
-                                    && storeRegistered.getSellerEmail().equals(sellerRegistered.getEmail())) {
-                                Seller newSeller = (Seller) sellerRegistered;
-                                ArrayList<Store> stores = newSeller.getStore();
-                                if (stores.contains(storeRegistered)) {
-                                    stores.set(stores.indexOf(storeRegistered), storeTemp);
-                                } else {
-                                    for (Store storeInSeller : stores) {
-                                        if (storeInSeller.getName().equals(storeTemp.getName())) {
-                                            stores.set(stores.indexOf(storeInSeller), storeTemp);
-                                            break;
-                                        }
+    public static void findAndReplaceProduct(Products productChanging) {
+        for (Products productListed : productsList) {
+            if (productListed.getName().equals(productChanging.getName()) &&
+                    productListed.getDescription().equals(productChanging.getDescription()) &&
+                    productListed.getStoreName().equals(productChanging.getStoreName())) {
+                productsList.set(productsList.indexOf(productListed), productChanging);
+                for (Store storeListed : storesList) {
+                    if (storeListed.getName().equals(productChanging.getStoreName())) {
+                        ArrayList<Products> goods = storeListed.getGoods();
+                        for (Products goodsStore : goods) {
+                            if (goodsStore.getName().equals(productChanging.getName()) &&
+                                    goodsStore.getDescription().equals(productChanging.getDescription())) {
+                                goods.set(goods.indexOf(goodsStore), productChanging);
+                                break;
+                            }
+                        }
+                        Store newStore = storeListed;
+                        newStore.setGoods(goods);
+                        storesList.set(storesList.indexOf(storeListed), newStore);
+                        for (User sellerRaw : sellersList) {
+                            if (sellerRaw.getName().equals(storeListed.getSellerName()) &&
+                                    sellerRaw.getEmail().equals(storeListed.getSellerEmail())) {
+                                Seller sellerListed = (Seller) sellerRaw;
+                                ArrayList<Store> stores = sellerListed.getStore();
+                                for (Store storeSeller : stores) {
+                                    if (storeSeller.getName().equals(storeListed.getName())) {
+                                        stores.set(stores.indexOf(storeSeller), newStore);
+                                        break;
                                     }
                                 }
-                                newSeller.setStore(stores);
-                                sellersList.set(sellersList.indexOf(sellerRegistered), newSeller);
-                                isFound = true;
+                                Seller sellerNew = (Seller) sellerRaw;
+                                sellerNew.setStore(stores);
+                                sellersList.set(sellersList.indexOf(sellerRaw), sellerNew);
                                 break;
                             }
                         }
                     }
-                    if (isFound) {
-                        break;
-                    }
                 }
-            }
-            if (isFound) {
-                break;
             }
         }
     }
