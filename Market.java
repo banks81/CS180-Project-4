@@ -459,8 +459,8 @@ public class Market {
                                             }
                                         } while (invalidChoice);
                                         switch (choice) {
-                                            case 1 -> {
-                                                ((Customer) currentUser).addToShoppingCart(productsList.get(productSelection - 1));
+                                            case 1 -> { //shopping cart requires quantity of item in the cart :/ I'll initialize it to be one for now
+                                                ((Customer) currentUser).addToShoppingCart(productsList.get(productSelection - 1), 1);
                                                 System.out.println(ADDEDTOSHOP);
                                                 System.out.println("Returning to product listings...");
                                                 stayInProductMenu = true;
@@ -604,8 +604,8 @@ public class Market {
                                             }
                                         } while (invalidChoice);
                                         switch (choice) {
-                                            case 1 -> {
-                                                ((Customer) currentUser).addToShoppingCart(foundProducts.get(userSelection - 1));
+                                            case 1 -> { //same here
+                                                ((Customer) currentUser).addToShoppingCart(foundProducts.get(userSelection - 1), 1);
                                                 System.out.println(ADDEDTOSHOP);
                                                 stayInProductMenu = true;
                                                 break;
@@ -983,7 +983,7 @@ public class Market {
                         }
                         String[] productDetails = lineNext.split(";;"); //Now splits if there is ;;
                         Products currentProduct = new Products(productDetails[0], Double.parseDouble(productDetails[1]), Integer.parseInt(productDetails[2]),
-                                productDetails[3], Integer.parseInt(productDetails[4]), storeName,0);
+                                productDetails[3], Integer.parseInt(productDetails[4]), storeName, Integer.parseInt(productDetails[5]));
                         currentStore.addGoods(currentProduct);
                         productsList.add(currentProduct);
                     }
