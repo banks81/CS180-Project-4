@@ -1100,4 +1100,55 @@ public class Market {
             System.out.println("Program terminated.");
         }
     }
+    
+    public static void updateSeller(Seller sellerNew) {
+        for (int i = 0; i < sellersList.size(); i++) {
+            Seller sellerOld = (Seller) sellersList.get(i);
+            if (sellerOld.getName().equals(sellerNew.getName()) && sellerOld.getEmail().equals(sellerNew.getEmail())
+                    && sellerOld.getPassword().equals(sellerNew.getPassword())) {
+                sellersList.set(i,sellerNew);
+                break;
+            }
+        }
+    }
+    
+    public static void updateCustomerPurchase(Products productBought) {
+        boolean isFound = false;
+        for (Products productRegistered : productsList) {
+            if (productRegistered.getName().equals(productBought.getName())
+                    && productRegistered.getStoreName().equals(productBought.getStoreName())
+                    && productRegistered.getDescription().equals(productBought.getDescription())) {
+                productsList.set(productsList.indexOf(productRegistered), productBought);
+                for (Store storeRegistered : storesList) {
+                    if (storeRegistered.getName().equals(productBought.getStoreName())) {
+                        Store storeTemp = storeRegistered;
+                        ArrayList<Products> newGoods = storeRegistered.getGoods();
+
+                        newGoods.set(newGoods.indexOf(productRegistered), productBought);
+                        storeTemp.setGoods(newGoods);
+                        storesList.set(storesList.indexOf(storeRegistered), storeTemp);
+                        for (User sellerRegistered : sellersList) {
+                            if (storeRegistered.getSellerName().equals(sellerRegistered.getName())
+                                    && storeRegistered.getSellerEmail().equals(sellerRegistered.getEmail())) {
+                                Seller seller = (Seller) sellerRegistered;
+                                ArrayList<Store> stores = seller.getStore();
+
+                                stores.set(stores.indexOf(storeRegistered), storeTemp);
+                                seller.setStore(stores);
+                                sellersList.set(sellersList.indexOf(sellerRegistered), seller);
+                                isFound = true;
+                                break;
+                            }
+                        }
+                        if (isFound) {
+                            break;
+                        }
+                    }
+                }
+            if (isFound) {
+                break;
+            }
+            }
+        }
+    }
 }
