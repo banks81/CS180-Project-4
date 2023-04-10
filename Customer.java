@@ -12,6 +12,24 @@ public class Customer extends User {
     public ArrayList<String> getShoppingCartChanges() {
         return shoppingCartChanges;
     }
+    
+    public void initializeToShoppingCart(Products products, int quantity) {    //Initializing
+        shoppingCart.add(products);
+        cartQuantityList.add(quantity);
+    }
+    public void addToShoppingCart(Products products, int quantity) {    //Within the market (I'm so sorry this had to happen :(((((( )
+        products.setInShoppingCart(products.getInShoppingCart() + quantity);
+        shoppingCart.add(products);
+        cartQuantityList.add(quantity);
+    }
+    
+    public ArrayList<Integer> getCartQuantityList() {
+        return cartQuantityList;
+    }
+
+    public void setCartQuantityList(ArrayList<Integer> cartQuantityList) {
+        this.cartQuantityList = cartQuantityList;
+    }
 
     public void setShoppingCartChanges(ArrayList<String> shoppingCartChanges) {
         this.shoppingCartChanges = shoppingCartChanges;
@@ -32,9 +50,7 @@ public class Customer extends User {
     public ArrayList<Products> getShoppingCart() {
         return shoppingCart;
     }
-    public void addToShoppingCart(Products products) {
-        shoppingCart.add(products);
-    }
+    
     public void removeFromShoppingCart(Products products) {
         for (int i = 0; i < shoppingCart.size(); i++) {
             if (products.equals(shoppingCart.get(i))) {
