@@ -1,3 +1,4 @@
+import java.util.Scanner;
 public class Products {
     private String name;
     private double price;
