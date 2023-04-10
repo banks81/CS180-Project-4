@@ -23,6 +23,9 @@ public class Seller extends User{
     public ArrayList<Store> getStore() {
         return (storeList);
     }
+    public void setStore(ArrayList<Store> storeNew) {
+        storeList = storeNew;
+    }
     public int checkChoice(Scanner scan, int lastNum){
         int choice;
         do {
