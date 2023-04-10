@@ -12,17 +12,18 @@ public class Customer extends User {
     public ArrayList<String> getShoppingCartChanges() {
         return shoppingCartChanges;
     }
-    
+
     public void initializeToShoppingCart(Products products, int quantity) {    //Initializing
         shoppingCart.add(products);
         cartQuantityList.add(quantity);
     }
+
     public void addToShoppingCart(Products products, int quantity) {    //Within the market (I'm so sorry this had to happen :(((((( )
         products.setInShoppingCart(products.getInShoppingCart() + quantity);
         shoppingCart.add(products);
         cartQuantityList.add(quantity);
     }
-    
+
     public ArrayList<Integer> getCartQuantityList() {
         return cartQuantityList;
     }
@@ -47,10 +48,11 @@ public class Customer extends User {
         cartQuantityList = new ArrayList<>();
 
     }
+
     public ArrayList<Products> getShoppingCart() {
         return shoppingCart;
     }
-    
+
     public void removeFromShoppingCart(Products products) {
         for (int i = 0; i < shoppingCart.size(); i++) {
             if (products.equals(shoppingCart.get(i))) {
@@ -84,13 +86,13 @@ public class Customer extends User {
     public void shoppingCartChangeHelper(String productname, int errorCode) {
         StringBuilder errorMessage = new StringBuilder();
         switch (errorCode) {
-            case 1 :    //out of stock
+            case 1:    //out of stock
                 errorMessage.append(String.format("The item %s is out of stock!", productname));
                 break;
-            case 2 :    //not found on database
+            case 2:    //not found on database
                 errorMessage.append(String.format("The item %s is not found in our database.", productname));
                 break;
-            default :   //This should NOT be the case
+            default:   //This should NOT be the case
                 errorMessage.append(String.format("Unknown error!"));
                 break;
         }
