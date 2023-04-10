@@ -199,7 +199,9 @@ public class Store {
                     System.out.println("File not found!");
                 }
             } else if (choice == 7){
-                // TODO export product csv file
+                System.out.println("Enter the name of the file: ");
+                String fileName = scan.nextLine();
+                writeProductFile(fileName);
             } else if (choice == 8){
                 break;
             }
@@ -235,6 +237,20 @@ public class Store {
                 }
             }
             bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void writeProductFile(String fileName) {
+        File file = new File(fileName);
+        try {
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bfw = new BufferedWriter(fw);
+            for (Products good : goods){
+                bfw.write(good.getName() + "," + good.getPrice() + "," + good.getQuantity() + "," + good.getDescription() +
+                        "," + good.getSales() + "," + good.getStoreName() + "\n");
+            }
+            bfw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
