@@ -11,6 +11,7 @@ import org.junit.runners.MethodSorters;
 import java.io.*;
 
 import static org.junit.Assert.*;
+
 public class TestThree {
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -22,6 +23,7 @@ public class TestThree {
             }
         }
     }
+
     @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
     public static class TestCase {
@@ -55,9 +57,6 @@ public class TestThree {
             testIn = new ByteArrayInputStream(str.getBytes());
             System.setIn(testIn);
         }
-
-
-
 
 
         @Test(timeout = 1000)
@@ -137,7 +136,6 @@ public class TestThree {
                 fail();
             }
         }
-
 
 
     }
