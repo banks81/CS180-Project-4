@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 import java.util.Scanner;
+
 public class Store {
     public String name;
     public ArrayList<Products> goods;
@@ -73,6 +74,7 @@ public class Store {
         return store;
         //to print in the market
     }
+
     public String getSellerName() {
         return sellerName;
     }
@@ -88,41 +90,45 @@ public class Store {
     public void setSellerEmail(String sellerEmail) {
         this.sellerEmail = sellerEmail;
     }
-    public int checkChoice(Scanner scan, int lastNum){
+
+    public int checkChoice(Scanner scan, int lastNum) {
         int choice;
         do {
             try {
                 choice = Integer.parseInt(scan.nextLine());
-                if (choice > 0 && choice < lastNum + 1){
+                if (choice > 0 && choice < lastNum + 1) {
                     return choice;
                 }
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid option!");
             }
         } while (true);
     }
-    public int checkInt(Scanner scan){
+
+    public int checkInt(Scanner scan) {
         int choice;
         do {
             try {
                 choice = Integer.parseInt(scan.nextLine());
                 return choice;
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid option!");
             }
         } while (true);
     }
-    public double checkDouble(Scanner scan){
+
+    public double checkDouble(Scanner scan) {
         double choice;
         do {
             try {
                 choice = Double.parseDouble(scan.nextLine());
                 return choice;
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid option!");
             }
         } while (true);
     }
+
     /*
      * View store code
      */
@@ -142,14 +148,14 @@ public class Store {
             if (choice == 1) {
                 int count = 0;
 
-                for (Products good : goods){
+                for (Products good : goods) {
                     count++;
                     System.out.println(good.toString());
                 }
-                if (count == 0){
+                if (count == 0) {
                     System.out.println("No products found!");
                 }
-            } else if (choice == 2){
+            } else if (choice == 2) {
                 // TODO view the history of sales
             } else if (choice == 3) {
                 System.out.println("Enter the name of the product: ");
@@ -162,7 +168,7 @@ public class Store {
                 int quantity = checkInt(scan);
                 addGoods(new Products(productName, price, quantity, productDescription, 0, name, 0));
                 System.out.println("Product successfully added!");
-            } else if (choice == 4){
+            } else if (choice == 4) {
                 int count = 0;
                 if (!goods.isEmpty()) {
                     System.out.println("Which product would you like to edit?");
@@ -176,7 +182,7 @@ public class Store {
                 } else {
                     System.out.println("No products available to edit!");
                 }
-            } else if (choice == 5){
+            } else if (choice == 5) {
                 int count = 0;
                 if (!goods.isEmpty()) {
                     System.out.println("Which product would you like to remove?");
@@ -190,29 +196,31 @@ public class Store {
                 } else {
                     System.out.println("No products available to remove!");
                 }
-            } else if (choice == 6){
+            } else if (choice == 6) {
                 System.out.println("Enter the name of the file: ");
                 String fileName = scan.nextLine();
                 try {
                     assignProduct(fileName);
-                } catch (FileNotFoundException e){
+                } catch (FileNotFoundException e) {
                     System.out.println("File not found!");
                 }
-            } else if (choice == 7){
+            } else if (choice == 7) {
                 System.out.println("Enter the name of the file: ");
                 String fileName = scan.nextLine();
                 writeProductFile(fileName);
-            } else if (choice == 8){
+            } else if (choice == 8) {
                 break;
             }
         } while (true);
 
     }
+
     public void editStore(Scanner scan) {
         System.out.println("Enter the name of the booth: ");
         String productName = scan.nextLine();
         setName(productName);
     }
+
     public void assignProduct(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
         if (!file.exists()) {
@@ -231,7 +239,8 @@ public class Store {
                     //Assuming the csv file is in name, price, quantity, description format
                     addGoods(new Products(lineBreak[0], Double.parseDouble(lineBreak[1]),
                             Integer.parseInt(lineBreak[2]), lineBreak[3], 0, getName(), 0)); //edit; store name added to the parameter & field of Products
-                } catch (Exception e) {                                                         //another edit made to initialize sale as int
+                } catch (
+                        Exception e) {                                                         //another edit made to initialize sale as int
                     System.out.println("Wrong file format!");                                   //better when we work with initialization from file IO
                     break;
                 }
@@ -241,12 +250,13 @@ public class Store {
             e.printStackTrace();
         }
     }
+
     public void writeProductFile(String fileName) {
         File file = new File(fileName);
         try {
             FileWriter fw = new FileWriter(file);
             BufferedWriter bfw = new BufferedWriter(fw);
-            for (Products good : goods){
+            for (Products good : goods) {
                 bfw.write(good.getName() + "," + good.getPrice() + "," + good.getQuantity() + "," + good.getDescription() +
                         "," + good.getSales() + "," + good.getStoreName() + "\n");
             }
