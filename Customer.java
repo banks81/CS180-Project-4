@@ -55,6 +55,7 @@ public class Customer extends User {
         for (int i = 0; i < shoppingCart.size(); i++) {
             if (products.equals(shoppingCart.get(i))) {
                 shoppingCart.remove(shoppingCart.get(i));
+                cartQuantityList.remove(i);
             }
         }
     }
