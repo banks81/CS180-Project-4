@@ -47,7 +47,9 @@ The Customer Class was tested by _________
 
 ### Products
 
-The Products class
+The Products class does not have a superclass/subclass relationship with any of the other files, however it is instantiated and called upon often in the Market, Store, and Customer classes. It contains all information necessary to identify a Product within its fields: name, price, quantity available, description, number of sales, and the name of the store it was from. It includes all the necessary getters and setters for this information. The Product class also has a toString method which makes it easier to print out all the relevant information about any given product from a different class. Lastly, it implements the required functionality of a Seller being able to edit a product in one of their Stores with the editProduct() method. This method is called from the Store class and allows a Seller to change the name, description, price, or quantity of the Product. 
+
+The Products class was tested by ___________
 
 
 ### Store
