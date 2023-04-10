@@ -1107,46 +1107,4 @@ public class Market {
             System.out.println("Program terminated.");
         }
     }
-    
-    public static void findAndReplaceProduct(Products productChanging) {
-        for (Products productListed : productsList) {
-            if (productListed.getName().equals(productChanging.getName()) &&
-                    productListed.getDescription().equals(productChanging.getDescription()) &&
-                    productListed.getStoreName().equals(productChanging.getStoreName())) {
-                productsList.set(productsList.indexOf(productListed), productChanging);
-                for (Store storeListed : storesList) {
-                    if (storeListed.getName().equals(productChanging.getStoreName())) {
-                        ArrayList<Products> goods = storeListed.getGoods();
-                        for (Products goodsStore : goods) {
-                            if (goodsStore.getName().equals(productChanging.getName()) &&
-                                    goodsStore.getDescription().equals(productChanging.getDescription())) {
-                                goods.set(goods.indexOf(goodsStore), productChanging);
-                                break;
-                            }
-                        }
-                        Store newStore = storeListed;
-                        newStore.setGoods(goods);
-                        storesList.set(storesList.indexOf(storeListed), newStore);
-                        for (User sellerRaw : sellersList) {
-                            if (sellerRaw.getName().equals(storeListed.getSellerName()) &&
-                                    sellerRaw.getEmail().equals(storeListed.getSellerEmail())) {
-                                Seller sellerListed = (Seller) sellerRaw;
-                                ArrayList<Store> stores = sellerListed.getStore();
-                                for (Store storeSeller : stores) {
-                                    if (storeSeller.getName().equals(storeListed.getName())) {
-                                        stores.set(stores.indexOf(storeSeller), newStore);
-                                        break;
-                                    }
-                                }
-                                Seller sellerNew = (Seller) sellerRaw;
-                                sellerNew.setStore(stores);
-                                sellersList.set(sellersList.indexOf(sellerRaw), sellerNew);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
