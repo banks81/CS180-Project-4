@@ -160,7 +160,7 @@ public class Store {
                 double price = checkDouble(scan);
                 System.out.println("Enter the quantity of the product: ");
                 int quantity = checkInt(scan);
-                addGoods(new Products(productName, price, quantity, productDescription, 0, name));
+                addGoods(new Products(productName, price, quantity, productDescription, 0, name, 0));
                 System.out.println("Product successfully added!");
             } else if (choice == 4){
                 int count = 0;
