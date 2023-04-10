@@ -33,8 +33,9 @@ The User class is not directly tested, but because the Market class contains ins
 
 ### Seller
 
-The Seller class
+The Seller class extends the User class, which contains the basic information of any Seller’s name, email, and password. The Seller class contains more specific information about the Seller, namely an ArrayList of type Store that contains all the booths that the Seller has created. It also contains the functionality to add, remove, and edit existing booths under that Seller’s name. Similar to how the Market class contains the functionality for the menus printed to the console for the Customer, the Seller class contains the logic that hosts the menus and print outs for a Seller navigating the program, specifically within the SellerMainMenu() function (which is called from the Market class). This implements the rest of the required functionality specified under the Option Three – Seller requirement, because it allows the Seller to view their current booths (which are Store objects) and their sales. Lastly, the Seller class implements the File I/O selection described in Option Three of the handout, which states that users must be able to import and export files containing Product information. The user can choose to do this through the menus printed in SellerMainMenu(), but the actual functionality of the File I/O is implemented in the AssignProduct() method. 
 
+The Seller class was tested by ________________
 
 ### Customer
 
