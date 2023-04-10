@@ -25,7 +25,10 @@ The Market class was tested __________________
 
 ### User
 
-The User class 
+The User class serves as a superclass to the Customer and Seller classes. This was to eliminate the repetition of code between the two subclasses, because both Sellers and Customers must have names, emails, and passwords within our implementation. The User class contains all of this information for any instance of a Customer or Seller.
+
+The User class is not directly tested, but because the Market class contains instances of its two subclasses, Seller and Customer, and the functionality of the program relies on its correct function, it was indirectly tested through our test cases run on the Market, Seller, and Customer classes. 
+
 
 
 ### Seller
